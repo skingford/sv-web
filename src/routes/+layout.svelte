@@ -1,4 +1,5 @@
 <script lang="ts">
+	import 'normalize.css';
 	import favicon from '$lib/assets/favicon.svg';
 	import '$lib/styles/global.scss';
 
