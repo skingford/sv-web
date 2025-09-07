@@ -8,9 +8,9 @@
 
 <div class="submenu">
 	{#each data.sections as section}
-	<div>
-		<a href="/settings/{section.slug}">{section.title}</a>
-	</div>
+		<div>
+			<a href="/settings/{section.slug}">{section.title}</a>
+		</div>
 	{/each}
 </div>
 

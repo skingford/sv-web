@@ -16,8 +16,8 @@
 	}
 </script>
 
-<input type="number" bind:value={a}> +
-<input type="number" bind:value={b}> =
+<input type="number" bind:value={a} /> +
+<input type="number" bind:value={b} /> =
 {total}
 
 <button onclick={add}>Calculate</button>

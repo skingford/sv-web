@@ -29,7 +29,7 @@
 		display: flex;
 		gap: 2rem;
 		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-		
+
 		a {
 			color: white;
 			text-decoration: none;
@@ -37,11 +37,11 @@
 			padding: 0.5rem 1rem;
 			border-radius: $border-radius;
 			transition: background-color $transition-duration ease;
-			
+
 			&:hover {
 				background-color: color.adjust($primary-color, $lightness: -15%);
 			}
-			
+
 			&:active {
 				background-color: color.adjust($primary-color, $lightness: -20%);
 			}

@@ -1,38 +1,28 @@
-# sv
+# sv-web
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+## commitlint
 
-## Creating a project
+```bash
+# 功能新增
+git commit -m "feat(auth): 添加第三方登录支持"
 
-If you're seeing this, you've probably already done this step. Congrats!
+# Bug修复
+git commit -m "fix(api): 修复分页参数解析错误"
 
-```sh
-# create a new project in the current directory
-npx sv create
+# 文档更新
+git commit -m "docs(readme): 更新安装指南和示例代码"
 
-# create a new project in my-app
-npx sv create my-app
+# 代码重构
+git commit -m "refactor(core): 重构用户服务模块"
+
+# 样式调整
+git commit -m "style(ui): 调整按钮样式和间距"
+
+git commit -m "feat(core): 实现用户权限管理系统
+
+- 添加角色管理功能
+- 实现权限验证中间件
+- 完善单元测试覆盖
+
+Closes #123, #456"
 ```
-
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```sh
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-To create a production version of your app:
-
-```sh
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
