@@ -26,6 +26,8 @@ git commit -m "refactor(core): 重构用户服务模块"
 # 样式调整
 git commit -m "style(ui): 调整按钮样式和间距"
 
+git commit -m "perf(vite): 封装rem插件"
+
 git commit -m "feat(core): 实现用户权限管理系统
 
 - 添加角色管理功能

@@ -6,24 +6,6 @@
 			name="viewport"
 			content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no"
 		/>
-		<!-- 预设根字体大小，避免页面加载时字体闪烁 -->
-		<script>
-			(function () {
-				// 与 rem-adapter 相同的配置
-				const designWidth = 375;
-				const baseFont = 16;
-				const minFont = 12;
-				const maxFont = 20;
-
-				// 计算初始根字体大小
-				const clientWidth = document.documentElement.clientWidth || window.innerWidth;
-				let rootFontSize = (clientWidth / designWidth) * baseFont;
-				rootFontSize = Math.max(minFont, Math.min(maxFont, rootFontSize));
-
-				// 立即设置根字体大小
-				document.documentElement.style.fontSize = rootFontSize + 'px';
-			})();
-		</script>
 		%sveltekit.head%
 	</head>
 	<body data-sveltekit-preload-data="hover">

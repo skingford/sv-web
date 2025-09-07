@@ -4,37 +4,7 @@
 
 	let { children } = $props();
 
-	$effect(() => {
-		// 确保在浏览器环境中
-		if (typeof window === 'undefined') return;
-
-		// 延迟加载简化版字体适配器
-		const animationId = requestAnimationFrame(() => {
-			import('$lib/utils/font-adapter').then(({ initFontAdapter }) => {
-				// 初始化字体适配器，返回清理函数
-				const cleanup = initFontAdapter();
-
-				// 监听字体变化事件（可选，用于调试）
-				const handleFontResize = (event: CustomEvent) => {
-					if (import.meta.env.DEV) {
-						console.log('Font resize:', event.detail);
-					}
-				};
-
-				window.addEventListener('fontResize', handleFontResize as EventListener);
-
-				// 组件销毁时清理
-				return () => {
-					cleanup();
-					window.removeEventListener('fontResize', handleFontResize as EventListener);
-				};
-			});
-		});
-
-		return () => {
-			cancelAnimationFrame(animationId);
-		};
-	});
+	// 字体适配由 Vite 插件自动处理，无需手动配置
 </script>
 
 <svelte:head>
@@ -47,6 +17,7 @@
 	<a href="/blog">Blog</a>
 	<a href="/responsive-demo">响应式演示</a>
 	<a href="/font-test">字体测试</a>
+	<a href="/plugin-demo">插件演示</a>
 	<a href="/settings">Settings</a>
 </nav>
 

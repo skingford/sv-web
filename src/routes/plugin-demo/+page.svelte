@@ -1,0 +1,196 @@
+<script lang="ts">
+	import { onMount } from 'svelte';
+	import type { FontResizeDetail } from 'virtual:font-adapter';
+
+	let fontUtils: any = null;
+	let fontConfig = {
+		designWidth: 375,
+		baseFont: 16,
+		minFont: 12,
+		maxFont: 20,
+		enableDevLog: false
+	};
+	let currentRootFont = '16px';
+	let calculatedFont = '16px';
+	let resizeHistory: string[] = [];
+
+	// 测试数据
+	const testPxValues = [12, 14, 16, 18, 20, 24, 32, 48];
+
+	onMount(async () => {
+		try {
+			// 导入虚拟模块
+			fontUtils = await import('virtual:font-adapter');
+			fontConfig = fontUtils.FONT_CONFIG;
+
+			// 获取当前字体大小
+			updateFontInfo();
+
+			// 监听字体变化
+			const unsubscribe = fontUtils.onFontResize((detail: FontResizeDetail) => {
+				resizeHistory = [
+					`${new Date().toLocaleTimeString()}: ${detail.rootFontSize.toFixed(1)}px (scale: ${detail.scale.toFixed(3)})`,
+					...resizeHistory
+				].slice(0, 5);
+				updateFontInfo();
+			});
+
+			return unsubscribe;
+		} catch (error) {
+			console.error('无法加载字体适配器虚拟模块:', error);
+		}
+	});
+
+	function updateFontInfo() {
+		if (fontUtils) {
+			currentRootFont = `${fontUtils.getCurrentRootFontSize()}px`;
+			calculatedFont = `${fontUtils.calculateRootFontSize()}px`;
+		}
+	}
+
+	function testPxToRem(px: number): string {
+		return fontUtils ? fontUtils.pxToRem(px) : '计算中...';
+	}
+
+	function testRemToPx(rem: number): number {
+		return fontUtils ? fontUtils.remToPx(rem) : 0;
+	}
+</script>
+
+<svelte:head>
+	<title>Vite 字体适配插件演示</title>
+</svelte:head>
+
+<div class="container mx-auto px-4 py-8 max-w-6xl">
+	<h1 class="text-4xl font-bold mb-8 text-center">🔌 Vite 字体适配插件演示</h1>
+
+	<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+		<!-- 插件配置信息 -->
+		<div class="bg-white p-6 rounded-lg shadow-md">
+			<h2 class="text-2xl font-semibold mb-4">📋 插件配置</h2>
+			<div class="space-y-2 text-sm">
+				<div class="flex justify-between">
+					<span class="font-medium">设计稿宽度:</span>
+					<code class="bg-gray-100 px-2 py-1 rounded">{fontConfig.designWidth}px</code>
+				</div>
+				<div class="flex justify-between">
+					<span class="font-medium">基础字体:</span>
+					<code class="bg-gray-100 px-2 py-1 rounded">{fontConfig.baseFont}px</code>
+				</div>
+				<div class="flex justify-between">
+					<span class="font-medium">字体范围:</span>
+					<code class="bg-gray-100 px-2 py-1 rounded"
+						>{fontConfig.minFont}px - {fontConfig.maxFont}px</code
+					>
+				</div>
+				<div class="flex justify-between">
+					<span class="font-medium">开发日志:</span>
+					<code class="bg-gray-100 px-2 py-1 rounded"
+						>{fontConfig.enableDevLog ? '开启' : '关闭'}</code
+					>
+				</div>
+			</div>
+		</div>
+
+		<!-- 实时字体信息 -->
+		<div class="bg-white p-6 rounded-lg shadow-md">
+			<h2 class="text-2xl font-semibold mb-4">📏 实时字体信息</h2>
+			<div class="space-y-2 text-sm">
+				<div class="flex justify-between">
+					<span class="font-medium">当前根字体:</span>
+					<code class="bg-green-100 px-2 py-1 rounded text-green-700">{currentRootFont}</code>
+				</div>
+				<div class="flex justify-between">
+					<span class="font-medium">计算字体大小:</span>
+					<code class="bg-blue-100 px-2 py-1 rounded text-blue-700">{calculatedFont}</code>
+				</div>
+				<div class="flex justify-between">
+					<span class="font-medium">窗口宽度:</span>
+					<code class="bg-gray-100 px-2 py-1 rounded"
+						>{typeof window !== 'undefined' ? window.innerWidth : 0}px</code
+					>
+				</div>
+				<div class="flex justify-between">
+					<span class="font-medium">缩放比例:</span>
+					<code class="bg-purple-100 px-2 py-1 rounded text-purple-700">
+						{fontUtils
+							? (fontUtils.getCurrentRootFontSize() / fontConfig.baseFont).toFixed(3)
+							: '计算中...'}
+					</code>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- PX 转 REM 工具 -->
+	<div class="mt-8 bg-white p-6 rounded-lg shadow-md">
+		<h2 class="text-2xl font-semibold mb-4">🔧 PX ⇄ REM 转换工具</h2>
+		<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+			{#each testPxValues as px}
+				<div class="text-center p-3 bg-gray-50 rounded">
+					<div class="font-mono text-lg font-bold text-blue-600">{px}px</div>
+					<div class="text-xs text-gray-500">↓</div>
+					<div class="font-mono text-sm text-green-600">{testPxToRem(px)}</div>
+					<div class="text-xs text-gray-500">↓</div>
+					<div class="font-mono text-xs text-purple-600">
+						{testRemToPx(parseFloat(testPxToRem(px))).toFixed(1)}px
+					</div>
+				</div>
+			{/each}
+		</div>
+		<p class="text-xs text-gray-500 mt-4 text-center">
+			当前根字体: {currentRootFont} | 1rem = {testRemToPx(1).toFixed(1)}px
+		</p>
+	</div>
+
+	<!-- 字体变化历史 -->
+	<div class="mt-8 bg-white p-6 rounded-lg shadow-md">
+		<h2 class="text-2xl font-semibold mb-4">📈 字体变化历史</h2>
+		<div class="bg-gray-50 p-4 rounded max-h-32 overflow-y-auto">
+			{#if resizeHistory.length > 0}
+				{#each resizeHistory as entry}
+					<div class="font-mono text-xs text-gray-600 mb-1">{entry}</div>
+				{/each}
+			{:else}
+				<p class="text-gray-500 italic text-sm">调整窗口大小来查看变化记录</p>
+			{/if}
+		</div>
+	</div>
+
+	<!-- 插件优势 -->
+	<div
+		class="mt-8 bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-lg p-6"
+	>
+		<h2 class="text-2xl font-semibold mb-4 text-blue-800">✨ Vite 插件的优势</h2>
+		<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+			<ul class="space-y-2 text-blue-700">
+				<li class="flex items-center">
+					<span class="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>
+					<span>自动注入，无需手动配置</span>
+				</li>
+				<li class="flex items-center">
+					<span class="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>
+					<span>代码零污染，配置集中化</span>
+				</li>
+				<li class="flex items-center">
+					<span class="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>
+					<span>支持开发和生产环境</span>
+				</li>
+			</ul>
+			<ul class="space-y-2 text-purple-700">
+				<li class="flex items-center">
+					<span class="w-2 h-2 bg-purple-500 rounded-full mr-3"></span>
+					<span>虚拟模块提供工具函数</span>
+				</li>
+				<li class="flex items-center">
+					<span class="w-2 h-2 bg-purple-500 rounded-full mr-3"></span>
+					<span>TypeScript 类型支持</span>
+				</li>
+				<li class="flex items-center">
+					<span class="w-2 h-2 bg-purple-500 rounded-full mr-3"></span>
+					<span>可配置化，易于扩展</span>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>
