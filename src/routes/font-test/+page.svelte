@@ -31,20 +31,20 @@
 
 		window.addEventListener('resize', handleResize);
 
-		// 监听 rem 变化事件
-		const handleRemResize = (event: CustomEvent) => {
+		// 监听字体变化事件
+		const handleFontResize = (event: CustomEvent) => {
 			fontSizeHistory = [
 				...fontSizeHistory,
 				`${new Date().toLocaleTimeString()}: ${event.detail.rootFontSize}px (事件)`
 			].slice(-10);
 		};
 
-		window.addEventListener('remResize', handleRemResize as EventListener);
+		window.addEventListener('fontResize', handleFontResize as EventListener);
 
 		return () => {
 			clearInterval(interval);
 			window.removeEventListener('resize', handleResize);
-			window.removeEventListener('remResize', handleRemResize as EventListener);
+			window.removeEventListener('fontResize', handleFontResize as EventListener);
 		};
 	});
 </script>

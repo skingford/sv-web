@@ -8,29 +8,27 @@
 		// 确保在浏览器环境中
 		if (typeof window === 'undefined') return;
 
-		// 延迟加载 rem-adapter，让页面首先渲染
-		const loadRemAdapter = () => {
-			import('$lib/utils/rem-adapter').then(({ default: remAdapter }) => {
-				// 监听自定义事件
-				const handleRemResize = (event: CustomEvent) => {
-					// 只在开发环境下输出日志
+		// 延迟加载简化版字体适配器
+		const animationId = requestAnimationFrame(() => {
+			import('$lib/utils/font-adapter').then(({ initFontAdapter }) => {
+				// 初始化字体适配器，返回清理函数
+				const cleanup = initFontAdapter();
+
+				// 监听字体变化事件（可选，用于调试）
+				const handleFontResize = (event: CustomEvent) => {
 					if (import.meta.env.DEV) {
-						console.log('Rem resize:', event.detail);
+						console.log('Font resize:', event.detail);
 					}
 				};
 
-				window.addEventListener('remResize', handleRemResize as EventListener);
+				window.addEventListener('fontResize', handleFontResize as EventListener);
 
-				// 返回清理函数
+				// 组件销毁时清理
 				return () => {
-					window.removeEventListener('remResize', handleRemResize as EventListener);
+					cleanup();
+					window.removeEventListener('fontResize', handleFontResize as EventListener);
 				};
 			});
-		};
-
-		// 使用 requestAnimationFrame 确保在下一帧加载，避免阻塞初始渲染
-		const animationId = requestAnimationFrame(() => {
-			loadRemAdapter();
 		});
 
 		return () => {
