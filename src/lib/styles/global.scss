@@ -1,7 +1,11 @@
 @use 'sass:color';
 @use 'sass:map';
 
-// 全局变量
+// rem适配相关变量
+$design-width: 375px; // 设计稿宽度
+$base-font-size: 16px; // 基础字体大小
+
+// 全局变量 - 使用px值，PostCSS会自动转换为rem
 $primary-color: #ff3e00;
 $secondary-color: #676778;
 $success-color: #40d9a5;
@@ -11,12 +15,15 @@ $error-color: #ff4757;
 $border-radius: 8px;
 $transition-duration: 0.3s;
 
-// 响应式断点
+// 响应式断点 - 基于rem单位的断点
 $breakpoints: (
 	'mobile': 480px,
+	// 约30rem (480/16)
 	'tablet': 768px,
+	// 约48rem (768/16)
 	'desktop': 1024px,
-	'wide': 1200px
+	// 约64rem (1024/16)
+	'wide': 1200px // 约75rem (1200/16)
 );
 
 // Mixin: 响应式媒体查询
@@ -69,12 +76,35 @@ $breakpoints: (
 	box-sizing: border-box;
 }
 
+html {
+	// 防止iOS横屏字体大小调整
+	-webkit-text-size-adjust: 100%;
+	// 防止点击高亮
+	-webkit-tap-highlight-color: transparent;
+}
+
 body {
 	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 	line-height: 1.6;
 	color: $secondary-color;
 	margin: 0;
 	padding: 0;
+	font-size: 14px; // 基础字体大小，会被PostCSS转换为rem
+
+	// 禁用长按选择
+	-webkit-user-select: none;
+	user-select: none;
+
+	// 禁用长按菜单
+	-webkit-touch-callout: none;
+}
+
+// 允许文本选择的元素
+input,
+textarea,
+[contenteditable] {
+	-webkit-user-select: auto;
+	user-select: auto;
 }
 
 // 工具类
@@ -128,13 +158,126 @@ body {
 .container {
 	max-width: 1200px;
 	margin: 0 auto;
-	padding: 0 1rem;
+	padding: 0 16px; // 16px会被转换为1rem
 
 	@include respond-to('tablet') {
-		padding: 0 2rem;
+		padding: 0 32px; // 32px会被转换为2rem
 	}
 
 	@include respond-to('desktop') {
-		padding: 0 3rem;
+		padding: 0 48px; // 48px会被转换为3rem
+	}
+}
+
+// rem适配相关工具类
+.no-rem {
+	// 标记为不转换rem的元素，PostCSS会跳过这个类下的px转换
+}
+
+// 响应式字体大小
+.font-xs {
+	font-size: 12px;
+}
+.font-sm {
+	font-size: 14px;
+}
+.font-base {
+	font-size: 16px;
+}
+.font-lg {
+	font-size: 18px;
+}
+.font-xl {
+	font-size: 20px;
+}
+.font-2xl {
+	font-size: 24px;
+}
+.font-3xl {
+	font-size: 30px;
+}
+
+// 响应式间距
+.p-xs {
+	padding: 4px;
+}
+.p-sm {
+	padding: 8px;
+}
+.p-base {
+	padding: 12px;
+}
+.p-lg {
+	padding: 16px;
+}
+.p-xl {
+	padding: 24px;
+}
+
+.m-xs {
+	margin: 4px;
+}
+.m-sm {
+	margin: 8px;
+}
+.m-base {
+	margin: 12px;
+}
+.m-lg {
+	margin: 16px;
+}
+.m-xl {
+	margin: 24px;
+}
+
+// Flexbox工具类
+.flex {
+	display: flex;
+}
+.flex-col {
+	flex-direction: column;
+}
+.flex-wrap {
+	flex-wrap: wrap;
+}
+.items-center {
+	align-items: center;
+}
+.justify-center {
+	justify-content: center;
+}
+.justify-between {
+	justify-content: space-between;
+}
+
+// 响应式显示控制
+.hidden {
+	display: none;
+}
+
+@include respond-to('mobile') {
+	.hidden-mobile {
+		display: none;
+	}
+	.block-mobile {
+		display: block;
+	}
+}
+
+@include respond-to('tablet') {
+	.hidden-tablet {
+		display: none;
+	}
+	.block-tablet {
+		display: block;
+	}
+}
+
+@include respond-to('desktop') {
+	.hidden-desktop {
+		display: none;
+	}
+	.block-desktop {
+		display: block;
 	}
 }

@@ -13,7 +13,7 @@
 
 <style lang="scss">
 	@use 'sass:color';
-	@use '$lib/styles/global.scss' as *;
+	@use '$lib/styles/variables.scss' as *;
 
 	h1 {
 		color: $primary-color;

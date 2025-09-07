@@ -25,24 +25,49 @@
 </div>
 
 <style lang="scss">
-	@use '$lib/styles/global.scss' as *;
+	@use '$lib/styles/variables.scss' as *;
 
 	.blog-card {
 		@include card-style();
 		text-align: center;
-		max-width: 300px;
-		margin: 1rem;
+		max-width: 300px; // PostCSS会将这些px转换为rem
+		margin: 16px; // 等效于1rem
+		transition: transform $transition-duration ease;
+
+		&:hover {
+			transform: translateY(-4px); // 悬停效果
+		}
 
 		p {
-			margin-bottom: 1rem;
+			margin-bottom: 16px; // 等效于1rem
 			color: $secondary-color;
-			font-size: 1.1rem;
+			font-size: 18px; // 会被转换为1.125rem
 		}
 
 		.button-group {
 			display: flex;
-			gap: 0.5rem;
+			gap: 8px; // 会被转换为0.5rem
 			justify-content: center;
+			flex-wrap: wrap; // 响应式换行
+		}
+	}
+
+	// 响应式适配
+	@include respond-to('mobile') {
+		.blog-card {
+			max-width: 280px;
+			margin: 12px;
+
+			p {
+				font-size: 16px;
+			}
+		}
+	}
+
+	@include respond-to('tablet') {
+		.blog-card {
+			max-width: 320px;
+			margin: 20px;
 		}
 	}
 </style>

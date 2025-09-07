@@ -3,6 +3,26 @@
 	import '$lib/styles/global.scss';
 
 	let { children } = $props();
+
+	$effect(() => {
+		// 确保在浏览器环境中
+		if (typeof window === 'undefined') return;
+
+		// 动态导入rem-adapter，只在客户端运行
+		import('$lib/utils/rem-adapter').then(({ default: remAdapter }) => {
+			// 监听自定义事件
+			const handleRemResize = (event: CustomEvent) => {
+				console.log('Rem resize:', event.detail);
+			};
+
+			window.addEventListener('remResize', handleRemResize as EventListener);
+
+			// 返回清理函数在effect销毁时执行
+			return () => {
+				window.removeEventListener('remResize', handleRemResize as EventListener);
+			};
+		});
+	});
 </script>
 
 <svelte:head>
@@ -12,8 +32,9 @@
 <nav>
 	<a href="/">Home</a>
 	<a href="/about">About</a>
-	<a href="/settings">Settings</a>
 	<a href="/blog">Blog</a>
+	<a href="/responsive-demo">响应式演示</a>
+	<a href="/settings">Settings</a>
 </nav>
 
 <main class="container">
@@ -22,7 +43,7 @@
 
 <style lang="scss">
 	@use 'sass:color';
-	@use '$lib/styles/global.scss' as *;
+	@use '$lib/styles/variables.scss' as *;
 
 	nav {
 		background-color: $primary-color;

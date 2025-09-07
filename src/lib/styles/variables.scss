@@ -1,0 +1,72 @@
+// 只包含变量和mixins，不包含实际的CSS规则
+@use 'sass:color';
+@use 'sass:map';
+
+// rem适配相关变量
+$design-width: 375px; // 设计稿宽度
+$base-font-size: 16px; // 基础字体大小
+
+// 全局变量 - 使用px值，PostCSS会自动转换为rem
+$primary-color: #ff3e00;
+$secondary-color: #676778;
+$success-color: #40d9a5;
+$warning-color: #ff8c42;
+$error-color: #d93025;
+
+// 布局变量
+$border-radius: 8px;
+$transition-duration: 0.3s;
+
+// 断点变量
+$breakpoints: (
+	mobile: 480px,
+	tablet: 768px,
+	desktop: 1024px,
+	large: 1200px
+);
+
+// Mixin: 按钮样式
+@mixin button-style($bg-color: $primary-color) {
+	background-color: $bg-color;
+	color: white;
+	border: none;
+	padding: 12px 24px; // PostCSS会转换为rem
+	border-radius: $border-radius;
+	cursor: pointer;
+	font-size: 16px; // 会被转换为rem
+	font-weight: 500;
+	transition: all $transition-duration ease;
+
+	&:hover {
+		background-color: color.adjust($bg-color, $lightness: -10%);
+		transform: translateY(-2px); // 悬停效果
+	}
+
+	&:active {
+		transform: translateY(0);
+	}
+}
+
+// Mixin: 卡片样式
+@mixin card-style() {
+	background: white;
+	border-radius: 8px; // 会被转换为rem
+	padding: 24px; // 会被转换为rem
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); // 会被转换为rem
+	transition: box-shadow $transition-duration ease;
+
+	&:hover {
+		box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15); // 会被转换为rem
+	}
+}
+
+// Mixin: 响应式媒体查询
+@mixin respond-to($breakpoint) {
+	@if map.has-key($breakpoints, $breakpoint) {
+		@media (min-width: map.get($breakpoints, $breakpoint)) {
+			@content;
+		}
+	} @else {
+		@warn "不存在的断点: #{$breakpoint}";
+	}
+}
