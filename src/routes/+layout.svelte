@@ -8,20 +8,34 @@
 		// 确保在浏览器环境中
 		if (typeof window === 'undefined') return;
 
-		// 动态导入rem-adapter，只在客户端运行
-		import('$lib/utils/rem-adapter').then(({ default: remAdapter }) => {
-			// 监听自定义事件
-			const handleRemResize = (event: CustomEvent) => {
-				console.log('Rem resize:', event.detail);
-			};
+		// 延迟加载 rem-adapter，让页面首先渲染
+		const loadRemAdapter = () => {
+			import('$lib/utils/rem-adapter').then(({ default: remAdapter }) => {
+				// 监听自定义事件
+				const handleRemResize = (event: CustomEvent) => {
+					// 只在开发环境下输出日志
+					if (import.meta.env.DEV) {
+						console.log('Rem resize:', event.detail);
+					}
+				};
 
-			window.addEventListener('remResize', handleRemResize as EventListener);
+				window.addEventListener('remResize', handleRemResize as EventListener);
 
-			// 返回清理函数在effect销毁时执行
-			return () => {
-				window.removeEventListener('remResize', handleRemResize as EventListener);
-			};
+				// 返回清理函数
+				return () => {
+					window.removeEventListener('remResize', handleRemResize as EventListener);
+				};
+			});
+		};
+
+		// 使用 requestAnimationFrame 确保在下一帧加载，避免阻塞初始渲染
+		const animationId = requestAnimationFrame(() => {
+			loadRemAdapter();
 		});
+
+		return () => {
+			cancelAnimationFrame(animationId);
+		};
 	});
 </script>
 
@@ -34,6 +48,7 @@
 	<a href="/about">About</a>
 	<a href="/blog">Blog</a>
 	<a href="/responsive-demo">响应式演示</a>
+	<a href="/font-test">字体测试</a>
 	<a href="/settings">Settings</a>
 </nav>
 

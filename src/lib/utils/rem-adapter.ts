@@ -61,8 +61,20 @@ class RemAdapter {
 		rootFontSize = Math.max(this.config.minFont, rootFontSize);
 		rootFontSize = Math.min(this.config.maxFont, rootFontSize);
 
-		// 设置根字体大小
-		document.documentElement.style.fontSize = `${rootFontSize}px`;
+		// 获取当前根字体大小
+		const currentFontSize = parseFloat(getComputedStyle(document.documentElement).fontSize);
+
+		// 只有当新字体大小与当前不同时才更新（避免无意义的重新设置）
+		if (Math.abs(rootFontSize - currentFontSize) > 0.1) {
+			// 平滑过渡到新字体大小
+			document.documentElement.style.transition = 'font-size 0.1s ease-out';
+			document.documentElement.style.fontSize = `${rootFontSize}px`;
+
+			// 移除过渡效果
+			setTimeout(() => {
+				document.documentElement.style.transition = '';
+			}, 100);
+		}
 
 		// 设置CSS自定义属性，供SCSS使用
 		document.documentElement.style.setProperty('--root-font-size', `${rootFontSize}px`);

@@ -81,6 +81,8 @@ html {
 	-webkit-text-size-adjust: 100%;
 	// 防止点击高亮
 	-webkit-tap-highlight-color: transparent;
+	// 设置默认字体大小，防止页面加载时闪烁
+	font-size: 16px; // 会被 rem-adapter 动态覆盖
 }
 
 body {
