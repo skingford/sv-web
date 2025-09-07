@@ -1,0 +1,124 @@
+@use 'sass:color';
+@use 'sass:map';
+
+// 全局变量
+$primary-color: #ff3e00;
+$secondary-color: #676778;
+$success-color: #40d9a5;
+$warning-color: #ff9500;
+$error-color: #ff4757;
+
+$border-radius: 8px;
+$transition-duration: 0.3s;
+
+// 响应式断点
+$breakpoints: (
+  'mobile': 480px,
+  'tablet': 768px,
+  'desktop': 1024px,
+  'wide': 1200px
+);
+
+// Mixin: 响应式媒体查询
+@mixin respond-to($breakpoint) {
+  @if map.has-key($breakpoints, $breakpoint) {
+    @media (min-width: map.get($breakpoints, $breakpoint)) {
+      @content;
+    }
+  } @else {
+    @warn "不存在的断点: #{$breakpoint}";
+  }
+}
+
+// Mixin: 按钮样式
+@mixin button-style($bg-color: $primary-color, $text-color: white) {
+  background-color: $bg-color;
+  color: $text-color;
+  border: none;
+  border-radius: $border-radius;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all $transition-duration ease;
+  
+  &:hover {
+    background-color: color.adjust($bg-color, $lightness: -10%);
+    transform: translateY(-2px);
+  }
+  
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+// Mixin: 卡片样式
+@mixin card-style($padding: 1.5rem) {
+  background: white;
+  border-radius: $border-radius;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: $padding;
+  transition: box-shadow $transition-duration ease;
+  
+  &:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  }
+}
+
+// 全局样式重置
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.6;
+  color: $secondary-color;
+  margin: 0;
+  padding: 0;
+}
+
+// 工具类
+.btn {
+  @include button-style();
+}
+
+.btn-secondary {
+  @include button-style($secondary-color);
+}
+
+.btn-success {
+  @include button-style($success-color);
+}
+
+.card {
+  @include card-style();
+}
+
+.text-center {
+  text-align: center;
+}
+
+.mt-1 { margin-top: 0.5rem; }
+.mt-2 { margin-top: 1rem; }
+.mt-3 { margin-top: 1.5rem; }
+.mt-4 { margin-top: 2rem; }
+
+.mb-1 { margin-bottom: 0.5rem; }
+.mb-2 { margin-bottom: 1rem; }
+.mb-3 { margin-bottom: 1.5rem; }
+.mb-4 { margin-bottom: 2rem; }
+
+// 响应式容器
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  
+  @include respond-to('tablet') {
+    padding: 0 2rem;
+  }
+  
+  @include respond-to('desktop') {
+    padding: 0 3rem;
+  }
+}
