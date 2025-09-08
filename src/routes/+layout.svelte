@@ -1,4 +1,5 @@
 <script lang="ts">
+	import '../app.css';
 	import 'normalize.css';
 	import '$lib/styles/global.scss';
 	import favicon from '$lib/assets/favicon.svg';
@@ -17,7 +18,7 @@
 	<a href="/responsive-demo">响应式演示</a>
 	<a href="/scss-test">SCSS 测试</a>
 	<a href="/auto-import-demo">Auto Import</a>
-	<a href="/settings">Settings</a>
+	<a href="/settings/profile">Settings</a>
 </nav>
 
 <main class="container">
