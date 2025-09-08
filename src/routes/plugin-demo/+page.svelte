@@ -1,7 +1,4 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-	import type { FontResizeDetail } from 'virtual:font-adapter';
-
 	let fontUtils: any = null;
 	let fontConfig = {
 		designWidth: 375,
@@ -16,30 +13,6 @@
 
 	// 测试数据
 	const testPxValues = [12, 14, 16, 18, 20, 24, 32, 48];
-
-	onMount(async () => {
-		try {
-			// 导入虚拟模块
-			fontUtils = await import('virtual:font-adapter');
-			fontConfig = fontUtils.FONT_CONFIG;
-
-			// 获取当前字体大小
-			updateFontInfo();
-
-			// 监听字体变化
-			const unsubscribe = fontUtils.onFontResize((detail: FontResizeDetail) => {
-				resizeHistory = [
-					`${new Date().toLocaleTimeString()}: ${detail.rootFontSize.toFixed(1)}px (scale: ${detail.scale.toFixed(3)})`,
-					...resizeHistory
-				].slice(0, 5);
-				updateFontInfo();
-			});
-
-			return unsubscribe;
-		} catch (error) {
-			console.error('无法加载字体适配器虚拟模块:', error);
-		}
-	});
 
 	function updateFontInfo() {
 		if (fontUtils) {

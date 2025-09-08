@@ -1,9 +1,9 @@
 <script lang="ts">
+	// 字体适配器由外部脚本 /static/font-adapter-sync.js 处理（同步设置 + 响应式监听）
+
 	import 'normalize.css';
 	import favicon from '$lib/assets/favicon.svg';
 	import '$lib/styles/global.scss';
-	// 导入字体适配器虚拟模块（自动初始化）
-	import 'virtual:font-adapter-init';
 
 	let { children } = $props();
 </script>

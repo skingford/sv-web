@@ -1,17 +1,10 @@
 import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vite';
-import { fontAdapterPlugin } from './src/lib/vite-plugins/font-adapter-plugin';
 
 export default defineConfig({
 	plugins: [
-		sveltekit(),
-		fontAdapterPlugin({
-			designWidth: 375,
-			baseFont: 16,
-			minFont: 12,
-			maxFont: 20,
-			enableDevLog: true // 开发环境启用日志
-		})
+		sveltekit()
+		// 字体适配功能由 /static/font-adapter-sync.js 提供，无需插件
 	],
 	css: {
 		devSourcemap: false, // 明确禁用开发模式CSS source maps

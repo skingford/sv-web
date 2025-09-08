@@ -5,34 +5,6 @@
 	let status = '检测中...';
 	let config: any = null;
 	let currentFontSize = '未知';
-
-	onMount(async () => {
-		try {
-			// 尝试导入虚拟模块
-			const initModule = await import('virtual:font-adapter-init');
-			console.log('虚拟模块加载成功:', initModule);
-			config = initModule.CONFIG;
-			status = '✅ 虚拟模块加载成功';
-
-			// 获取当前字体大小
-			function updateFontSize() {
-				currentFontSize = getComputedStyle(document.documentElement).fontSize;
-			}
-
-			updateFontSize();
-
-			// 监听字体变化
-			window.addEventListener('fontResize', () => {
-				updateFontSize();
-			});
-
-			// 定时更新
-			setInterval(updateFontSize, 1000);
-		} catch (error) {
-			console.error('虚拟模块加载失败:', error);
-			status = '❌ 虚拟模块加载失败: ' + (error as Error).message;
-		}
-	});
 </script>
 
 <svelte:head>
