@@ -4,6 +4,17 @@
 	import favicon from '$lib/assets/favicon.svg';
 
 	let { children } = $props();
+
+	// 在开发环境下初始化 VConsole
+	onMount(async () => {
+		if (typeof window !== 'undefined' && import.meta.env.DEV) {
+			const VConsole = (await import('vconsole')).default;
+			new VConsole({
+				maxLogNumber: 1000,
+				theme: 'light'
+			});
+		}
+	});
 </script>
 
 <svelte:head>
