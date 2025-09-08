@@ -10,36 +10,38 @@ $base-font-size: 16px; // 基础字体大小
 $primary-color: #ff3e00;
 $secondary-color: #676778;
 $success-color: #40d9a5;
-$warning-color: #ff8c42;
-$error-color: #d93025;
+$warning-color: #ff9500; // 统一颜色值
+$error-color: #ff4757; // 统一颜色值
 
 // 布局变量
 $border-radius: 8px;
 $transition-duration: 0.3s;
 
-// 断点变量
+// 响应式断点 - 基于rem单位的断点
 $breakpoints: (
-	mobile: 480px,
-	tablet: 768px,
-	desktop: 1024px,
-	large: 1200px
+	'mobile': 480px,
+	// 约30rem (480/16)
+	'tablet': 768px,
+	// 约48rem (768/16)
+	'desktop': 1024px,
+	// 约64rem (1024/16)
+	'wide': 1200px // 约75rem (1200/16)
 );
 
 // Mixin: 按钮样式
-@mixin button-style($bg-color: $primary-color) {
+@mixin button-style($bg-color: $primary-color, $text-color: white) {
 	background-color: $bg-color;
-	color: white;
+	color: $text-color;
 	border: none;
-	padding: 12px 24px; // PostCSS会转换为rem
 	border-radius: $border-radius;
+	padding: 0.75rem 1.5rem;
+	font-size: 1rem;
 	cursor: pointer;
-	font-size: 16px; // 会被转换为rem
-	font-weight: 500;
 	transition: all $transition-duration ease;
 
 	&:hover {
 		background-color: color.adjust($bg-color, $lightness: -10%);
-		transform: translateY(-2px); // 悬停效果
+		transform: translateY(-2px);
 	}
 
 	&:active {
@@ -48,15 +50,15 @@ $breakpoints: (
 }
 
 // Mixin: 卡片样式
-@mixin card-style() {
+@mixin card-style($padding: 1.5rem) {
 	background: white;
-	border-radius: 8px; // 会被转换为rem
-	padding: 24px; // 会被转换为rem
-	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); // 会被转换为rem
+	border-radius: $border-radius;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+	padding: $padding;
 	transition: box-shadow $transition-duration ease;
 
 	&:hover {
-		box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15); // 会被转换为rem
+		box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
 	}
 }
 

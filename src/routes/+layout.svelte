@@ -2,7 +2,6 @@
 	import 'normalize.css';
 	import favicon from '$lib/assets/favicon.svg';
 	import '$lib/styles/global.scss';
-
 	// 导入字体适配器虚拟模块（自动初始化）
 	import 'virtual:font-adapter-init';
 
@@ -18,6 +17,7 @@
 	<a href="/about">About</a>
 	<a href="/blog">Blog</a>
 	<a href="/responsive-demo">响应式演示</a>
+	<a href="/scss-test">SCSS 测试</a>
 	<a href="/settings">Settings</a>
 </nav>
 
@@ -27,7 +27,6 @@
 
 <style lang="scss">
 	@use 'sass:color';
-	@use '$lib/styles/variables.scss' as *;
 
 	nav {
 		background-color: $primary-color;
