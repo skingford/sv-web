@@ -18,9 +18,12 @@
 	const updateScreenInfo = () => {
 		if (typeof window === 'undefined' || typeof document === 'undefined') return;
 
+		const rootFontSize = getRootFontSize();
+		console.log('rootFontSize', rootFontSize);
+
 		screenInfo = {
+			rootFontSize,
 			clientWidth: document.documentElement.clientWidth || window.innerWidth,
-			rootFontSize: getRootFontSize(),
 			scale: (document.documentElement.clientWidth || window.innerWidth) / 375
 		};
 	};

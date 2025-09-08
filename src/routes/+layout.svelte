@@ -3,9 +3,10 @@
 	import favicon from '$lib/assets/favicon.svg';
 	import '$lib/styles/global.scss';
 
-	let { children } = $props();
+	// 导入字体适配器虚拟模块（自动初始化）
+	import 'virtual:font-adapter-init';
 
-	// 字体适配由 Vite 插件自动处理，无需手动配置
+	let { children } = $props();
 </script>
 
 <svelte:head>
@@ -17,8 +18,6 @@
 	<a href="/about">About</a>
 	<a href="/blog">Blog</a>
 	<a href="/responsive-demo">响应式演示</a>
-	<a href="/font-test">字体测试</a>
-	<a href="/plugin-demo">插件演示</a>
 	<a href="/settings">Settings</a>
 </nav>
 

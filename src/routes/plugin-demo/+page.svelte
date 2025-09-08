@@ -62,7 +62,7 @@
 </svelte:head>
 
 <div class="container mx-auto px-4 py-8 max-w-6xl">
-	<h1 class="text-4xl font-bold mb-8 text-center">🔌 Vite 字体适配插件演示</h1>
+	<h1 class="text-4xl font-bold mb-8 text-center f16">🔌 Vite 字体适配插件演示</h1>
 
 	<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
 		<!-- 插件配置信息 -->
@@ -157,6 +157,25 @@
 		</div>
 	</div>
 
+	<!-- px 转 rem 测试区域 -->
+	<div class="mt-8 bg-white p-6 rounded-lg shadow-md">
+		<h2 class="text-2xl font-semibold mb-4">🔄 PX 自动转换测试</h2>
+		<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+			<div class="test-px-conversion bg-blue-100 text-center">
+				<p class="f16">16px 字体 (应该是 1rem)</p>
+			</div>
+			<div class="large-text bg-green-100 text-center p-4">
+				<p>24px 字体 (应该是 1.5rem)</p>
+			</div>
+			<div class="no-rem-test bg-yellow-100 text-center p-4">
+				<p>18px 字体测试</p>
+			</div>
+		</div>
+		<div class="mt-4 text-sm text-gray-600">
+			<p>💡 提示：打开开发者工具查看这些元素的计算样式，px 值应该已经被转换为 rem</p>
+		</div>
+	</div>
+
 	<!-- 插件优势 -->
 	<div
 		class="mt-8 bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-lg p-6"
@@ -194,3 +213,32 @@
 		</div>
 	</div>
 </div>
+
+<style lang="scss">
+	/* 测试 px 转 rem */
+	.f16 {
+		font-size: 16px; /* 这个应该被转换为 1rem */
+	}
+
+	.test-px-conversion {
+		/* 各种 px 值测试 */
+		width: 100px;
+		height: 80px;
+		padding: 12px 16px;
+		margin: 8px;
+		border-radius: 4px;
+		font-size: 14px;
+		line-height: 20px;
+
+		/* 这些值应该保持不变 */
+		border: 1px solid #ccc; /* 1px 边框通常保持不变 */
+	}
+
+	.large-text {
+		font-size: 24px; /* 应该转换为 1.5rem */
+	}
+
+	.no-rem-test {
+		font-size: 18px; /* 如果类名包含 no-rem，应该不转换 */
+	}
+</style>

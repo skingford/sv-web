@@ -24,3 +24,17 @@ declare module 'virtual:font-adapter' {
 	export function pxToRem(px: number): string;
 	export function remToPx(rem: number): number;
 }
+
+// 字体适配器自动初始化虚拟模块类型声明
+declare module 'virtual:font-adapter-init' {
+	export const CONFIG: {
+		designWidth: number;
+		baseFont: number;
+		minFont: number;
+		maxFont: number;
+		enableDevLog: boolean;
+	};
+	export const cleanup: (() => void) | undefined;
+	const config: typeof CONFIG;
+	export default config;
+}
