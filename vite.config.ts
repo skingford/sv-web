@@ -1,6 +1,7 @@
 import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vite';
 import AutoImport from 'unplugin-auto-import/vite';
+import { viteVConsole } from './src/lib/vite-plugins/vconsole';
 
 export default defineConfig({
 	plugins: [
@@ -22,6 +23,13 @@ export default defineConfig({
 				enabled: true,
 				filepath: './.eslintrc-auto-import.json'
 			}
+		}),
+		viteVConsole({
+			enabled: true, // 默认只在开发环境启用
+			maxLogNumber: 1000,
+			theme: 'light',
+			entryFiles: ['src/routes/+layout.svelte'], // 注入的目标文件
+			disableInProduction: true
 		})
 	],
 	css: {
