@@ -1,7 +1,7 @@
 import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vite';
 import AutoImport from 'unplugin-auto-import/vite';
-import { viteVConsole } from './src/lib/vite-plugins/vconsole';
+import { viteVConsole } from './src/lib/vite-plugins';
 
 export default defineConfig({
 	plugins: [
@@ -24,12 +24,12 @@ export default defineConfig({
 				filepath: './.eslintrc-auto-import.json'
 			}
 		}),
+		// VConsole 插件 - 自动在开发环境中注入 VConsole
 		viteVConsole({
-			enabled: true, // 默认只在开发环境启用
+			enabled: true,
 			maxLogNumber: 1000,
 			theme: 'light',
-			entryFiles: ['src/routes/+layout.svelte'], // 注入的目标文件
-			disableInProduction: true
+			entryFiles: ['src/routes/+layout.svelte']
 		})
 	],
 	css: {
