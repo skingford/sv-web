@@ -1,4 +1,8 @@
 /// <reference types="vite/client" />
+/// <reference types="unplugin-auto-import/client" />
+
+// 引入 auto-import 生成的类型定义
+/// <reference path="./auto-imports.d.ts" />
 
 // 字体适配器全局类型声明
 declare global {

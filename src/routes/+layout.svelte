@@ -1,9 +1,7 @@
 <script lang="ts">
-	// 字体适配器由外部脚本 /static/font-adapter-sync.js 处理（同步设置 + 响应式监听）
-
 	import 'normalize.css';
-	import favicon from '$lib/assets/favicon.svg';
 	import '$lib/styles/global.scss';
+	import favicon from '$lib/assets/favicon.svg';
 
 	let { children } = $props();
 </script>
@@ -18,6 +16,7 @@
 	<a href="/blog">Blog</a>
 	<a href="/responsive-demo">响应式演示</a>
 	<a href="/scss-test">SCSS 测试</a>
+	<a href="/auto-import-demo">Auto Import</a>
 	<a href="/settings">Settings</a>
 </nav>
 

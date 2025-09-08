@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	// onMount 现在通过 unplugin-auto-import 自动引入，无需手动 import
 
 	// 测试虚拟模块是否可用
 	let status = '检测中...';

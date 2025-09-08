@@ -10,4 +10,7 @@ declare global {
 	}
 }
 
+// 引入 auto-import 生成的全局类型
+/// <reference path="./auto-imports.d.ts" />
+
 export {};

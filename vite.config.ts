@@ -1,10 +1,28 @@
 import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vite';
+import AutoImport from 'unplugin-auto-import/vite';
 
 export default defineConfig({
 	plugins: [
-		sveltekit()
-		// 字体适配功能由 /static/font-adapter-sync.js 提供，无需插件
+		sveltekit(),
+		AutoImport({
+			imports: [
+				// Svelte 预设
+				'svelte',
+				// Svelte Stores
+				{
+					'svelte/store': ['writable', 'readable', 'derived', 'get']
+				}
+			],
+			dts: './types/auto-imports.d.ts', // 生成类型定义文件
+			dirs: [], // 不自动引入目录下的文件
+			vueTemplate: false, // 不是 Vue 项目
+			// 确保 ESLint 能识别自动导入
+			eslintrc: {
+				enabled: true,
+				filepath: './.eslintrc-auto-import.json'
+			}
+		})
 	],
 	css: {
 		devSourcemap: false, // 明确禁用开发模式CSS source maps
