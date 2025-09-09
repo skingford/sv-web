@@ -5,53 +5,13 @@
 	</p>
 
 	<div class="button-group">
-		<button class="btn">Primary Button</button>
-		<button class="btn-secondary">Secondary Button</button>
-		<button class="btn-success">Success Button</button>
+		<button
+			class="inline-block cursor-pointer rounded-md bg-gray-800 px-4 py-3 text-center text-sm font-semibold uppercase text-white transition duration-200 ease-in-out hover:bg-gray-900"
+		>
+			Button
+		</button>
+		<button class="btn btn-primary">One</button>
+		<button class="btn btn-secondary">Two</button>
+		<button class="btn btn-accent btn-outline">Three</button>
 	</div>
 </div>
-
-<style lang="scss">
-	@use 'sass:color';
-	@use '$lib/styles/variables.scss' as *;
-
-	h1 {
-		color: $primary-color;
-		font-size: 2.5rem;
-		font-weight: bold;
-		margin-bottom: 1rem;
-
-		&:hover {
-			color: color.adjust($primary-color, $lightness: -10%);
-			transition: color $transition-duration ease;
-		}
-	}
-
-	p {
-		color: $secondary-color;
-		line-height: 1.6;
-
-		a {
-			color: $primary-color;
-			text-decoration: none;
-			border-radius: $border-radius;
-			padding: 0.2rem 0.4rem;
-
-			&:hover {
-				background-color: color.adjust($primary-color, $lightness: 45%);
-				transition: background-color $transition-duration ease;
-			}
-		}
-	}
-
-	.button-group {
-		display: flex;
-		gap: 1rem;
-		justify-content: center;
-		flex-wrap: wrap;
-
-		@include respond-to('mobile') {
-			flex-direction: row;
-		}
-	}
-</style>
