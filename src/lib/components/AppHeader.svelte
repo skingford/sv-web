@@ -1,25 +1,32 @@
 <script lang="ts">
 	import { Button } from '$lib/components/ui/button';
-	import { onMount } from 'svelte';
+	import {
+		DropdownMenu,
+		DropdownMenuContent,
+		DropdownMenuItem,
+		DropdownMenuSeparator,
+		DropdownMenuTrigger
+	} from '$lib/components/ui/dropdown-menu';
+	import { Avatar, AvatarFallback, AvatarImage } from '$lib/components/ui/avatar';
+	import { Badge } from '$lib/components/ui/badge';
+	import { Input } from '$lib/components/ui/input';
+	import {
+		NavigationMenuRoot as NavigationMenu,
+		NavigationMenuContent,
+		NavigationMenuItem,
+		NavigationMenuLink,
+		NavigationMenuList,
+		NavigationMenuTrigger
+	} from '$lib/components/ui/navigation-menu';
+	import {
+		Sheet,
+		SheetContent,
+		SheetHeader,
+		SheetTitle,
+		SheetTrigger
+	} from '$lib/components/ui/sheet';
 
-	let isMenuOpen = $state(false);
-	let isUserMenuOpen = $state(false);
 	let searchQuery = $state('');
-	let headerElement: HTMLElement;
-
-	function toggleMenu() {
-		isMenuOpen = !isMenuOpen;
-		if (isMenuOpen) {
-			isUserMenuOpen = false;
-		}
-	}
-
-	function toggleUserMenu() {
-		isUserMenuOpen = !isUserMenuOpen;
-		if (isUserMenuOpen) {
-			isMenuOpen = false;
-		}
-	}
 
 	function handleSearch(event: Event) {
 		event.preventDefault();
@@ -28,37 +35,9 @@
 			console.log('搜索:', searchQuery);
 		}
 	}
-
-	function closeMenus() {
-		isMenuOpen = false;
-		isUserMenuOpen = false;
-	}
-
-	onMount(() => {
-		function handleClickOutside(event: MouseEvent) {
-			if (headerElement && !headerElement.contains(event.target as Node)) {
-				closeMenus();
-			}
-		}
-
-		function handleEscape(event: KeyboardEvent) {
-			if (event.key === 'Escape') {
-				closeMenus();
-			}
-		}
-
-		document.addEventListener('click', handleClickOutside);
-		document.addEventListener('keydown', handleEscape);
-
-		return () => {
-			document.removeEventListener('click', handleClickOutside);
-			document.removeEventListener('keydown', handleEscape);
-		};
-	});
 </script>
 
 <header
-	bind:this={headerElement}
 	class="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
 >
 	<div class="container mx-auto px-4">
@@ -78,73 +57,139 @@
 			</div>
 
 			<!-- 桌面端导航菜单 -->
-			<nav class="hidden items-center space-x-6 md:flex">
-				<div class="group relative">
-					<button
-						class="flex items-center space-x-1 text-sm font-medium text-foreground transition-colors hover:text-muted-foreground"
-					>
-						<span>产品</span>
-						<svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-							<path
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								stroke-width="2"
-								d="M19 9l-7 7-7-7"
-							></path>
-						</svg>
-					</button>
-					<!-- 下拉菜单可以在这里添加 -->
-				</div>
+			<NavigationMenu class="hidden md:flex">
+				<NavigationMenuList>
+					<NavigationMenuItem>
+						<NavigationMenuTrigger>产品</NavigationMenuTrigger>
+						<NavigationMenuContent>
+							<div class="grid gap-3 p-6 md:w-[400px] lg:w-[500px]">
+								<div class="row-span-3">
+									<NavigationMenuLink>
+										<a
+											class="flex h-full w-full flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none select-none focus:shadow-md"
+											href="/products"
+										>
+											<div class="mt-4 mb-2 text-lg font-medium">产品中心</div>
+											<p class="text-sm leading-tight text-muted-foreground">
+												探索我们的核心产品和服务
+											</p>
+										</a>
+									</NavigationMenuLink>
+								</div>
+								<div class="grid gap-3">
+									<NavigationMenuLink>
+										<a
+											href="/products/github-actions"
+											class="block space-y-1 rounded-md p-3 leading-none no-underline transition-colors outline-none select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+										>
+											<div class="text-sm leading-none font-medium">GitHub Actions</div>
+											<p class="line-clamp-2 text-sm leading-snug text-muted-foreground">
+												自动化您的工作流程
+											</p>
+										</a>
+									</NavigationMenuLink>
+									<NavigationMenuLink>
+										<a
+											href="/products/codespaces"
+											class="block space-y-1 rounded-md p-3 leading-none no-underline transition-colors outline-none select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+										>
+											<div class="text-sm leading-none font-medium">Codespaces</div>
+											<p class="line-clamp-2 text-sm leading-snug text-muted-foreground">
+												云端开发环境
+											</p>
+										</a>
+									</NavigationMenuLink>
+								</div>
+							</div>
+						</NavigationMenuContent>
+					</NavigationMenuItem>
 
-				<div class="group relative">
-					<button
-						class="flex items-center space-x-1 text-sm font-medium text-foreground transition-colors hover:text-muted-foreground"
-					>
-						<span>解决方案</span>
-						<svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-							<path
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								stroke-width="2"
-								d="M19 9l-7 7-7-7"
-							></path>
-						</svg>
-					</button>
-				</div>
+					<NavigationMenuItem>
+						<NavigationMenuTrigger>解决方案</NavigationMenuTrigger>
+						<NavigationMenuContent>
+							<div class="grid gap-3 p-6 md:w-[400px] lg:w-[500px]">
+								<div class="grid gap-3">
+									<NavigationMenuLink>
+										<a
+											href="/solutions/enterprise"
+											class="block space-y-1 rounded-md p-3 leading-none no-underline transition-colors outline-none select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+										>
+											<div class="text-sm leading-none font-medium">企业解决方案</div>
+											<p class="line-clamp-2 text-sm leading-snug text-muted-foreground">
+												为大型企业提供完整的开发平台
+											</p>
+										</a>
+									</NavigationMenuLink>
+									<NavigationMenuLink>
+										<a
+											href="/solutions/startup"
+											class="block space-y-1 rounded-md p-3 leading-none no-underline transition-colors outline-none select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+										>
+											<div class="text-sm leading-none font-medium">初创公司</div>
+											<p class="line-clamp-2 text-sm leading-snug text-muted-foreground">
+												快速启动您的项目
+											</p>
+										</a>
+									</NavigationMenuLink>
+								</div>
+							</div>
+						</NavigationMenuContent>
+					</NavigationMenuItem>
 
-				<div class="group relative">
-					<button
-						class="flex items-center space-x-1 text-sm font-medium text-foreground transition-colors hover:text-muted-foreground"
-					>
-						<span>开源</span>
-						<svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-							<path
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								stroke-width="2"
-								d="M19 9l-7 7-7-7"
-							></path>
-						</svg>
-					</button>
-				</div>
+					<NavigationMenuItem>
+						<NavigationMenuTrigger>开源</NavigationMenuTrigger>
+						<NavigationMenuContent>
+							<div class="grid gap-3 p-6 md:w-[400px] lg:w-[500px]">
+								<div class="grid gap-3">
+									<NavigationMenuLink>
+										<a
+											href="/open-source/projects"
+											class="block space-y-1 rounded-md p-3 leading-none no-underline transition-colors outline-none select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+										>
+											<div class="text-sm leading-none font-medium">开源项目</div>
+											<p class="line-clamp-2 text-sm leading-snug text-muted-foreground">
+												探索和贡献开源项目
+											</p>
+										</a>
+									</NavigationMenuLink>
+									<NavigationMenuLink>
+										<a
+											href="/open-source/community"
+											class="block space-y-1 rounded-md p-3 leading-none no-underline transition-colors outline-none select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+										>
+											<div class="text-sm leading-none font-medium">社区</div>
+											<p class="line-clamp-2 text-sm leading-snug text-muted-foreground">
+												加入我们的开发者社区
+											</p>
+										</a>
+									</NavigationMenuLink>
+								</div>
+							</div>
+						</NavigationMenuContent>
+					</NavigationMenuItem>
 
-				<a
-					href="/pricing"
-					class="text-sm font-medium text-foreground transition-colors hover:text-muted-foreground"
-				>
-					定价
-				</a>
-			</nav>
+					<NavigationMenuItem>
+						<NavigationMenuLink>
+							<a
+								href="/pricing"
+								class="group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50"
+							>
+								<span>定价</span>
+							</a>
+						</NavigationMenuLink>
+					</NavigationMenuItem>
+				</NavigationMenuList>
+			</NavigationMenu>
 
 			<!-- 搜索框 -->
 			<div class="mx-8 hidden max-w-md flex-1 lg:flex">
 				<form onsubmit={handleSearch} class="relative w-full">
 					<div class="relative">
-						<input
+						<Input
 							type="text"
 							placeholder="搜索或跳转到..."
 							bind:value={searchQuery}
-							class="h-9 w-full rounded-md border border-input bg-muted px-3 py-2 text-sm focus:border-transparent focus:ring-2 focus:ring-ring focus:outline-none"
+							class="pr-12"
 						/>
 						<div
 							class="absolute top-1/2 right-2 flex -translate-y-1/2 transform items-center space-x-1"
@@ -161,10 +206,7 @@
 			<!-- 右侧用户区域 -->
 			<div class="flex items-center space-x-4">
 				<!-- 通知按钮 -->
-				<button
-					class="relative p-2 text-muted-foreground transition-colors hover:text-foreground"
-					aria-label="通知"
-				>
+				<Button variant="ghost" size="icon" class="relative" aria-label="通知">
 					<svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 						<path
 							stroke-linecap="round"
@@ -173,130 +215,137 @@
 							d="M15 17h5l-5 5v-5zM4.5 19.5L9 15H4.5v4.5zM15 7h5l-5-5v5zM4.5 4.5L9 9H4.5V4.5z"
 						></path>
 					</svg>
-					<span class="absolute -top-1 -right-1 h-3 w-3 rounded-full bg-destructive"></span>
-				</button>
+					<Badge
+						variant="destructive"
+						class="absolute -top-1 -right-1 h-3 w-3 rounded-full p-0 text-xs"
+					>
+						3
+					</Badge>
+				</Button>
 
 				<!-- 用户头像和菜单 -->
-				<div class="relative">
-					<button
-						onclick={toggleUserMenu}
-						class="flex items-center space-x-2 rounded-full p-1 transition-colors hover:bg-muted"
-					>
-						<div
-							class="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-r from-blue-500 to-purple-600"
-						>
-							<span class="text-sm font-medium text-white">U</span>
+				<DropdownMenu>
+					<DropdownMenuTrigger class="relative h-8 w-8 rounded-full">
+						<Avatar class="h-8 w-8">
+							<AvatarImage src="/avatars/01.png" alt="用户头像" />
+							<AvatarFallback class="bg-gradient-to-r from-blue-500 to-purple-600 text-white">
+								U
+							</AvatarFallback>
+						</Avatar>
+					</DropdownMenuTrigger>
+					<DropdownMenuContent class="w-64" align="end" forceMount>
+						<div class="flex items-center justify-start gap-2 p-2">
+							<div class="flex flex-col space-y-1 leading-none">
+								<p class="font-medium">用户名</p>
+								<p class="w-[200px] truncate text-sm text-muted-foreground">user@example.com</p>
+							</div>
 						</div>
-						<svg
-							class="h-4 w-4 text-muted-foreground"
-							fill="none"
-							stroke="currentColor"
-							viewBox="0 0 24 24"
-						>
-							<path
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								stroke-width="2"
-								d="M19 9l-7 7-7-7"
-							></path>
-						</svg>
-					</button>
+						<DropdownMenuSeparator />
+						<DropdownMenuItem>
+							<a href="/profile" class="block w-full">个人资料</a>
+						</DropdownMenuItem>
+						<DropdownMenuItem>
+							<a href="/settings" class="block w-full">设置</a>
+						</DropdownMenuItem>
+						<DropdownMenuItem>
+							<a href="/help" class="block w-full">帮助</a>
+						</DropdownMenuItem>
+						<DropdownMenuSeparator />
+						<DropdownMenuItem>
+							<button class="block w-full text-left">登出</button>
+						</DropdownMenuItem>
+					</DropdownMenuContent>
+				</DropdownMenu>
 
-					<!-- 用户下拉菜单 -->
-					{#if isUserMenuOpen}
-						<div
-							class="absolute right-0 z-50 mt-2 w-64 rounded-md border border-border bg-popover shadow-lg"
-						>
-							<div class="border-b border-border p-4">
-								<div class="flex items-center space-x-3">
-									<div
-										class="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-r from-blue-500 to-purple-600"
-									>
-										<span class="text-sm font-medium text-white">U</span>
-									</div>
-									<div>
-										<p class="text-sm font-medium text-foreground">用户名</p>
-										<p class="text-xs text-muted-foreground">user@example.com</p>
+				<!-- 移动端菜单 -->
+				<Sheet>
+					<SheetTrigger>
+						<Button variant="ghost" size="icon" class="md:hidden" aria-label="打开菜单">
+							<svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M4 6h16M4 12h16M4 18h16"
+								></path>
+							</svg>
+						</Button>
+					</SheetTrigger>
+					<SheetContent side="right" class="w-[300px] sm:w-[400px]">
+						<SheetHeader>
+							<SheetTitle>菜单</SheetTitle>
+						</SheetHeader>
+						<div class="mt-6 space-y-6">
+							<!-- 移动端搜索框 -->
+							<form onsubmit={handleSearch} class="space-y-2">
+								<Input type="text" placeholder="搜索或跳转到..." bind:value={searchQuery} />
+							</form>
+
+							<!-- 移动端导航链接 -->
+							<nav class="space-y-4">
+								<div class="space-y-2">
+									<h4 class="text-sm font-medium text-muted-foreground">产品</h4>
+									<div class="space-y-1">
+										<a
+											href="/products"
+											class="block py-2 text-sm text-foreground hover:text-muted-foreground"
+											>产品中心</a
+										>
+										<a
+											href="/products/github-actions"
+											class="block py-2 text-sm text-foreground hover:text-muted-foreground"
+											>GitHub Actions</a
+										>
+										<a
+											href="/products/codespaces"
+											class="block py-2 text-sm text-foreground hover:text-muted-foreground"
+											>Codespaces</a
+										>
 									</div>
 								</div>
-							</div>
-							<div class="py-2">
-								<a href="/profile" class="block px-4 py-2 text-sm text-foreground hover:bg-muted"
-									>个人资料</a
-								>
-								<a href="/settings" class="block px-4 py-2 text-sm text-foreground hover:bg-muted"
-									>设置</a
-								>
-								<a href="/help" class="block px-4 py-2 text-sm text-foreground hover:bg-muted"
-									>帮助</a
-								>
-								<div class="my-2 border-t border-border"></div>
-								<button
-									class="block w-full px-4 py-2 text-left text-sm text-foreground hover:bg-muted"
-									>登出</button
-								>
-							</div>
-						</div>
-					{/if}
-				</div>
 
-				<!-- 移动端菜单按钮 -->
-				<button
-					onclick={toggleMenu}
-					class="p-2 text-muted-foreground transition-colors hover:text-foreground md:hidden"
-					aria-label="打开菜单"
-				>
-					<svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-						<path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							stroke-width="2"
-							d="M4 6h16M4 12h16M4 18h16"
-						></path>
-					</svg>
-				</button>
+								<div class="space-y-2">
+									<h4 class="text-sm font-medium text-muted-foreground">解决方案</h4>
+									<div class="space-y-1">
+										<a
+											href="/solutions/enterprise"
+											class="block py-2 text-sm text-foreground hover:text-muted-foreground"
+											>企业解决方案</a
+										>
+										<a
+											href="/solutions/startup"
+											class="block py-2 text-sm text-foreground hover:text-muted-foreground"
+											>初创公司</a
+										>
+									</div>
+								</div>
+
+								<div class="space-y-2">
+									<h4 class="text-sm font-medium text-muted-foreground">开源</h4>
+									<div class="space-y-1">
+										<a
+											href="/open-source/projects"
+											class="block py-2 text-sm text-foreground hover:text-muted-foreground"
+											>开源项目</a
+										>
+										<a
+											href="/open-source/community"
+											class="block py-2 text-sm text-foreground hover:text-muted-foreground">社区</a
+										>
+									</div>
+								</div>
+
+								<div class="space-y-1">
+									<a
+										href="/pricing"
+										class="block py-2 text-sm text-foreground hover:text-muted-foreground">定价</a
+									>
+								</div>
+							</nav>
+						</div>
+					</SheetContent>
+				</Sheet>
 			</div>
 		</div>
-
-		<!-- 移动端菜单 -->
-		{#if isMenuOpen}
-			<div class="border-t border-border bg-background md:hidden">
-				<div class="space-y-4 px-4 py-4">
-					<!-- 移动端搜索框 -->
-					<form onsubmit={handleSearch} class="relative">
-						<input
-							type="text"
-							placeholder="搜索或跳转到..."
-							bind:value={searchQuery}
-							class="h-9 w-full rounded-md border border-input bg-muted px-3 py-2 text-sm focus:border-transparent focus:ring-2 focus:ring-ring focus:outline-none"
-						/>
-					</form>
-
-					<!-- 移动端导航链接 -->
-					<nav class="space-y-2">
-						<a
-							href="/products"
-							class="block py-2 text-sm font-medium text-foreground hover:text-muted-foreground"
-							>产品</a
-						>
-						<a
-							href="/solutions"
-							class="block py-2 text-sm font-medium text-foreground hover:text-muted-foreground"
-							>解决方案</a
-						>
-						<a
-							href="/open-source"
-							class="block py-2 text-sm font-medium text-foreground hover:text-muted-foreground"
-							>开源</a
-						>
-						<a
-							href="/pricing"
-							class="block py-2 text-sm font-medium text-foreground hover:text-muted-foreground"
-							>定价</a
-						>
-					</nav>
-				</div>
-			</div>
-		{/if}
 	</div>
 </header>
