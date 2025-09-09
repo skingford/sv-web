@@ -2,12 +2,19 @@ import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig, loadEnv } from 'vite';
 import AutoImport from 'unplugin-auto-import/vite';
 import { viteVConsole } from './src/lib/vite-plugins';
+import path from 'path';
 
 export default defineConfig(({ mode }) => {
 	// 加载环境变量
 	const env = loadEnv(mode, process.cwd(), '');
 
 	return {
+		resolve: {
+			alias: {
+				'@types': path.resolve(__dirname, './types'),
+				'@types/*': path.resolve(__dirname, './types/*')
+			}
+		},
 		plugins: [
 			sveltekit(),
 			AutoImport({

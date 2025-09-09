@@ -1,4 +1,4 @@
-import type { Environment, LogLevel, ParsedEnvironmentVariables } from '../../../types/env';
+import type { Environment, LogLevel, ParsedEnvironmentVariables } from '@types';
 
 /**
  * 环境变量工具类
