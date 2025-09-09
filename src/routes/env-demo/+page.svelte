@@ -19,74 +19,74 @@
 	<title>{appName} - 环境变量演示</title>
 </svelte:head>
 
-<div class="container mx-auto p-6 max-w-4xl">
-	<h1 class="text-3xl font-bold mb-6">🔧 环境变量配置演示</h1>
+<div class="container mx-auto max-w-4xl p-6">
+	<h1 class="mb-6 text-3xl font-bold">🔧 环境变量配置演示</h1>
 
 	<!-- 环境信息卡片 -->
-	<div class="bg-white rounded-lg shadow-lg p-6 mb-6">
-		<h2 class="text-xl font-semibold mb-4 flex items-center">
+	<div class="mb-6 rounded-lg bg-white p-6 shadow-lg">
+		<h2 class="mb-4 flex items-center text-xl font-semibold">
 			<span class="mr-2">🌍</span>
 			环境信息
 		</h2>
 
-		<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-			<div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
+		<div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+			<div class="rounded-lg border-l-4 border-blue-500 bg-blue-50 p-4">
 				<h3 class="font-semibold text-blue-800">当前环境</h3>
-				<p class="text-blue-600 text-lg">{config.environment}</p>
+				<p class="text-lg text-blue-600">{config.environment}</p>
 			</div>
 
-			<div class="bg-green-50 p-4 rounded-lg border-l-4 border-green-500">
+			<div class="rounded-lg border-l-4 border-green-500 bg-green-50 p-4">
 				<h3 class="font-semibold text-green-800">开发模式</h3>
-				<p class="text-green-600 text-lg">{isDev ? '是' : '否'}</p>
+				<p class="text-lg text-green-600">{isDev ? '是' : '否'}</p>
 			</div>
 
-			<div class="bg-purple-50 p-4 rounded-lg border-l-4 border-purple-500">
+			<div class="rounded-lg border-l-4 border-purple-500 bg-purple-50 p-4">
 				<h3 class="font-semibold text-purple-800">生产模式</h3>
-				<p class="text-purple-600 text-lg">{isProd ? '是' : '否'}</p>
+				<p class="text-lg text-purple-600">{isProd ? '是' : '否'}</p>
 			</div>
 		</div>
 	</div>
 
 	<!-- 应用信息 -->
-	<div class="bg-white rounded-lg shadow-lg p-6 mb-6">
-		<h2 class="text-xl font-semibold mb-4 flex items-center">
+	<div class="mb-6 rounded-lg bg-white p-6 shadow-lg">
+		<h2 class="mb-4 flex items-center text-xl font-semibold">
 			<span class="mr-2">📱</span>
 			应用信息
 		</h2>
 
 		<div class="space-y-3">
-			<div class="flex justify-between items-center py-2 border-b border-gray-200">
+			<div class="flex items-center justify-between border-b border-gray-200 py-2">
 				<span class="font-medium text-gray-700">应用名称:</span>
 				<span class="text-gray-900">{config.appName}</span>
 			</div>
-			<div class="flex justify-between items-center py-2 border-b border-gray-200">
+			<div class="flex items-center justify-between border-b border-gray-200 py-2">
 				<span class="font-medium text-gray-700">版本:</span>
 				<span class="text-gray-900">{config.appVersion}</span>
 			</div>
-			<div class="flex justify-between items-center py-2">
+			<div class="flex items-center justify-between py-2">
 				<span class="font-medium text-gray-700">描述:</span>
-				<span class="text-gray-900 text-right max-w-xs">{config.appDescription}</span>
+				<span class="max-w-xs text-right text-gray-900">{config.appDescription}</span>
 			</div>
 		</div>
 	</div>
 
 	<!-- API 配置 -->
-	<div class="bg-white rounded-lg shadow-lg p-6 mb-6">
-		<h2 class="text-xl font-semibold mb-4 flex items-center">
+	<div class="mb-6 rounded-lg bg-white p-6 shadow-lg">
+		<h2 class="mb-4 flex items-center text-xl font-semibold">
 			<span class="mr-2">🔗</span>
 			API 配置
 		</h2>
 
 		<div class="space-y-3">
-			<div class="flex justify-between items-center py-2 border-b border-gray-200">
+			<div class="flex items-center justify-between border-b border-gray-200 py-2">
 				<span class="font-medium text-gray-700">API 地址:</span>
-				<span class="text-gray-900 font-mono text-sm">{config.apiBaseUrl}</span>
+				<span class="font-mono text-sm text-gray-900">{config.apiBaseUrl}</span>
 			</div>
-			<div class="flex justify-between items-center py-2 border-b border-gray-200">
+			<div class="flex items-center justify-between border-b border-gray-200 py-2">
 				<span class="font-medium text-gray-700">超时时间:</span>
 				<span class="text-gray-900">{config.apiTimeout}ms</span>
 			</div>
-			<div class="flex justify-between items-center py-2">
+			<div class="flex items-center justify-between py-2">
 				<span class="font-medium text-gray-700">状态:</span>
 				<span class="text-gray-900">{getApiStatus()}</span>
 			</div>
@@ -94,38 +94,38 @@
 	</div>
 
 	<!-- 功能开关 -->
-	<div class="bg-white rounded-lg shadow-lg p-6 mb-6">
-		<h2 class="text-xl font-semibold mb-4 flex items-center">
+	<div class="mb-6 rounded-lg bg-white p-6 shadow-lg">
+		<h2 class="mb-4 flex items-center text-xl font-semibold">
 			<span class="mr-2">🎛️</span>
 			功能开关
 		</h2>
 
-		<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+		<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
 			<div class="space-y-3">
-				<div class="flex justify-between items-center py-2">
+				<div class="flex items-center justify-between py-2">
 					<span class="font-medium text-gray-700">Mock 数据:</span>
 					<span>{getFeatureStatus(config.enableMock)}</span>
 				</div>
-				<div class="flex justify-between items-center py-2">
+				<div class="flex items-center justify-between py-2">
 					<span class="font-medium text-gray-700">调试模式:</span>
 					<span>{getFeatureStatus(config.enableDebug)}</span>
 				</div>
-				<div class="flex justify-between items-center py-2">
+				<div class="flex items-center justify-between py-2">
 					<span class="font-medium text-gray-700">数据分析:</span>
 					<span>{getFeatureStatus(config.enableAnalytics)}</span>
 				</div>
 			</div>
 
 			<div class="space-y-3">
-				<div class="flex justify-between items-center py-2">
+				<div class="flex items-center justify-between py-2">
 					<span class="font-medium text-gray-700">VConsole:</span>
 					<span>{getFeatureStatus(config.enableVConsole)}</span>
 				</div>
-				<div class="flex justify-between items-center py-2">
+				<div class="flex items-center justify-between py-2">
 					<span class="font-medium text-gray-700">开发工具:</span>
 					<span>{getFeatureStatus(config.showDevTools)}</span>
 				</div>
-				<div class="flex justify-between items-center py-2">
+				<div class="flex items-center justify-between py-2">
 					<span class="font-medium text-gray-700">PWA:</span>
 					<span>{getFeatureStatus(config.enablePWA)}</span>
 				</div>
@@ -135,8 +135,8 @@
 
 	<!-- 开发者信息 -->
 	{#if config.developerMode}
-		<div class="bg-yellow-50 border-l-4 border-yellow-400 p-6 rounded-lg mb-6">
-			<h2 class="text-xl font-semibold mb-4 flex items-center text-yellow-800">
+		<div class="mb-6 rounded-lg border-l-4 border-yellow-400 bg-yellow-50 p-6">
+			<h2 class="mb-4 flex items-center text-xl font-semibold text-yellow-800">
 				<span class="mr-2">🛠️</span>
 				开发者模式信息
 			</h2>
@@ -157,21 +157,21 @@
 
 	<!-- 第三方服务 -->
 	{#if config.sentryDsn || config.gaTrackingId}
-		<div class="bg-white rounded-lg shadow-lg p-6 mb-6">
-			<h2 class="text-xl font-semibold mb-4 flex items-center">
+		<div class="mb-6 rounded-lg bg-white p-6 shadow-lg">
+			<h2 class="mb-4 flex items-center text-xl font-semibold">
 				<span class="mr-2">🔌</span>
 				第三方服务
 			</h2>
 
 			<div class="space-y-3">
 				{#if config.sentryDsn}
-					<div class="flex justify-between items-center py-2 border-b border-gray-200">
+					<div class="flex items-center justify-between border-b border-gray-200 py-2">
 						<span class="font-medium text-gray-700">Sentry:</span>
 						<span class="text-green-600">✅ 已配置</span>
 					</div>
 				{/if}
 				{#if config.gaTrackingId}
-					<div class="flex justify-between items-center py-2">
+					<div class="flex items-center justify-between py-2">
 						<span class="font-medium text-gray-700">Google Analytics:</span>
 						<span class="text-green-600">✅ 已配置</span>
 					</div>
@@ -181,27 +181,27 @@
 	{/if}
 
 	<!-- 使用说明 -->
-	<div class="bg-gray-50 rounded-lg p-6">
-		<h2 class="text-xl font-semibold mb-4 flex items-center">
+	<div class="rounded-lg bg-gray-50 p-6">
+		<h2 class="mb-4 flex items-center text-xl font-semibold">
 			<span class="mr-2">📚</span>
 			使用说明
 		</h2>
 
 		<div class="space-y-4 text-gray-700">
 			<div>
-				<h3 class="font-semibold mb-2">环境变量文件优先级：</h3>
-				<ol class="list-decimal list-inside space-y-1 ml-4">
+				<h3 class="mb-2 font-semibold">环境变量文件优先级：</h3>
+				<ol class="ml-4 list-inside list-decimal space-y-1">
 					<li>
-						<code class="bg-gray-200 px-1 rounded">.env.local</code> - 本地覆盖（被 git 忽略）
+						<code class="rounded bg-gray-200 px-1">.env.local</code> - 本地覆盖（被 git 忽略）
 					</li>
-					<li><code class="bg-gray-200 px-1 rounded">.env.{mode}</code> - 特定环境配置</li>
-					<li><code class="bg-gray-200 px-1 rounded">.env</code> - 默认配置</li>
+					<li><code class="rounded bg-gray-200 px-1">.env.{mode}</code> - 特定环境配置</li>
+					<li><code class="rounded bg-gray-200 px-1">.env</code> - 默认配置</li>
 				</ol>
 			</div>
 
 			<div>
-				<h3 class="font-semibold mb-2">在代码中使用：</h3>
-				<pre class="bg-gray-800 text-green-400 p-4 rounded-lg text-sm overflow-x-auto"><code
+				<h3 class="mb-2 font-semibold">在代码中使用：</h3>
+				<pre class="overflow-x-auto rounded-lg bg-gray-800 p-4 text-sm text-green-400"><code
 						>{`// 导入环境变量工具
 import { config, env, isDev } from '$lib/utils/env';
 

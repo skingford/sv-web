@@ -1,3 +1,4 @@
+import tailwindcss from '@tailwindcss/vite';
 import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig, loadEnv } from 'vite';
 import AutoImport from 'unplugin-auto-import/vite';
@@ -16,6 +17,7 @@ export default defineConfig(({ mode }) => {
 			}
 		},
 		plugins: [
+			tailwindcss(),
 			sveltekit(),
 			AutoImport({
 				imports: [
