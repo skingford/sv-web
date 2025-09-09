@@ -4,3 +4,4 @@
  */
 
 export { viteVConsole } from './vconsole';
+export { cssVendorSplit } from './css-vendor-split';

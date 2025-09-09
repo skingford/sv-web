@@ -46,6 +46,39 @@ export default defineConfig({
 		}
 	},
 	build: {
-		sourcemap: false // 明确禁用构建时source maps
+		sourcemap: false, // 明确禁用构建时source maps
+		// 代码分割配置 - 只保留JavaScript分割，CSS由SvelteKit管理
+		rollupOptions: {
+			output: {
+				// JavaScript 代码分割 - 将第三方库分离到独立chunks
+				manualChunks(id) {
+					// 只处理node_modules中的模块
+					if (id.includes('node_modules')) {
+						// 基础样式库
+						if (id.includes('normalize.css')) {
+							return 'vendor-styles';
+						}
+						// UI 组件库
+						if (id.includes('flowbite') || id.includes('flowbite-svelte')) {
+							return 'vendor-ui';
+						}
+						// 开发工具
+						if (id.includes('vconsole')) {
+							return 'vendor-dev';
+						}
+						// Svelte 相关库（除了 SvelteKit 本身）
+						if (id.includes('svelte') && !id.includes('@sveltejs/kit')) {
+							return 'vendor-svelte';
+						}
+						// 其他第三方库
+						return 'vendor';
+					}
+				}
+			}
+		},
+		// 优化构建配置
+		chunkSizeWarningLimit: 500,
+		// 压缩配置
+		minify: 'esbuild'
 	}
 });
