@@ -36,8 +36,6 @@ export interface VConsolePluginOptions {
  * 自动为 Svelte 项目注入 VConsole 调试工具
  */
 export function viteVConsole(options: VConsolePluginOptions = {}): Plugin {
-	console.log('[ VConsole Plugin ] Plugin initialized with options:', options);
-
 	const {
 		enabled = true,
 		maxLogNumber = 1000,
@@ -47,21 +45,17 @@ export function viteVConsole(options: VConsolePluginOptions = {}): Plugin {
 	} = options;
 
 	let config: ResolvedConfig;
-	let isDevMode = false;
 
 	return {
 		name: 'vite-vconsole',
 		enforce: 'pre',
 		configResolved(resolvedConfig) {
 			config = resolvedConfig;
-			isDevMode = config.command === 'serve';
-			console.log('[ VConsole Plugin ] Config resolved. Dev mode:', isDevMode);
-			console.log('[ VConsole Plugin ] Root path:', config.root);
-			console.log('[ VConsole Plugin ] Target files:', entryFiles);
 		},
 		load(id) {
 			// 只在开发环境且插件启用时处理
-			if (!enabled || (disableInProduction && !isDevMode)) {
+			if (!enabled) {
+				console.log('[ VConsole Plugin ] Skipped - plugin not enabled');
 				return null;
 			}
 
@@ -74,8 +68,6 @@ export function viteVConsole(options: VConsolePluginOptions = {}): Plugin {
 			if (!id.endsWith('.svelte')) {
 				return null;
 			}
-
-			console.log('[ VConsole Plugin ] Load called for .svelte file:', id);
 
 			// 检查是否为目标文件
 			const isTargetFile = entryFiles.some((file) => {
@@ -86,24 +78,20 @@ export function viteVConsole(options: VConsolePluginOptions = {}): Plugin {
 				// 构建完整的文件路径用于比较
 				const fullFilePath = (config.root + '/' + normalizedFile).replace(/\\/g, '/').toLowerCase();
 
-				console.log('[ VConsole Plugin ] Checking:', normalizedId);
-				console.log('[ VConsole Plugin ] Against:', fullFilePath);
-
 				// 精确匹配文件路径或相对路径匹配
 				return normalizedId === fullFilePath || normalizedId.endsWith('/' + normalizedFile);
 			});
 
 			if (!isTargetFile) {
-				console.log('[ VConsole Plugin ] Skipped - not target file');
 				return null;
 			}
 
-			console.log('[ VConsole Plugin ] Processing target file in load hook:', id);
 			return null; // 让其他插件处理加载
 		},
 		transform(code, id) {
 			// 只在开发环境且插件启用时处理
-			if (!enabled || (disableInProduction && !isDevMode)) {
+			if (!enabled) {
+				console.log('[ VConsole Plugin ] Skipped - plugin not enabled');
 				return null;
 			}
 
@@ -117,8 +105,6 @@ export function viteVConsole(options: VConsolePluginOptions = {}): Plugin {
 				return null;
 			}
 
-			console.log('[ VConsole Plugin ] Processing .svelte file:', id);
-
 			// 检查是否为目标文件
 			const isTargetFile = entryFiles.some((file) => {
 				// 规范化路径比较
@@ -128,9 +114,6 @@ export function viteVConsole(options: VConsolePluginOptions = {}): Plugin {
 				// 构建完整的文件路径用于比較
 				const fullFilePath = (config.root + '/' + normalizedFile).replace(/\\/g, '/').toLowerCase();
 
-				console.log('[ VConsole Plugin ] Checking:', normalizedId);
-				console.log('[ VConsole Plugin ] Against:', fullFilePath);
-
 				// 精确匹配文件路径或相对路径匹配
 				return normalizedId === fullFilePath || normalizedId.endsWith('/' + normalizedFile);
 			});
@@ -139,8 +122,6 @@ export function viteVConsole(options: VConsolePluginOptions = {}): Plugin {
 				console.log('[ VConsole Plugin ] Skipped - not target file');
 				return null;
 			}
-
-			console.log('[ VConsole Plugin ] Processing target file:', id);
 
 			// 检查是否已经包含 VConsole 代码，避免重复注入
 			if (code.includes('VConsole') || code.includes('vconsole')) {
@@ -164,20 +145,16 @@ export function viteVConsole(options: VConsolePluginOptions = {}): Plugin {
 	}
 `;
 
-			console.log('[ VConsole Plugin ] Injecting VConsole code');
-
 			// 在 <script> 标签结束前注入代码
 			const scriptEndRegex = /<\/script>/;
 			if (scriptEndRegex.test(code)) {
 				const modifiedCode = code.replace(scriptEndRegex, vConsoleCode + '</script>');
-				console.log('[ VConsole Plugin ] Code injected successfully');
 				return {
 					code: modifiedCode,
 					map: null
 				};
 			}
 
-			console.log('[ VConsole Plugin ] No script tag found for injection');
 			return null;
 		}
 	};
