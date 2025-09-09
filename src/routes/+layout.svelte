@@ -17,7 +17,8 @@
 	<a href="/responsive-demo">响应式演示</a>
 	<a href="/scss-test">SCSS 测试</a>
 	<a href="/auto-import-demo">Auto Import</a>
-	<a href="/settings">Settings</a>
+	<a href="/env-demo">环境变量</a>
+	<a href="/settings/profile">Settings</a>
 </nav>
 
 <main class="container">
