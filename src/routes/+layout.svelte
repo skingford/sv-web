@@ -8,6 +8,7 @@
 
 <svelte:head>
 	<link rel="icon" href={favicon} />
+	<script src="/font-adapter-sync.js"></script>
 </svelte:head>
 
 <nav>
