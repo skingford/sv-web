@@ -36,3 +36,11 @@ git commit -m "feat(core): 实现用户权限管理系统
 
 Closes #123, #456"
 ```
+
+## docs
+
+- [svelte](https://svelte.dev/docs/svelte/overview)
+
+- [tailwindcss](https://tailwindcss.com/docs/installation/using-vite)
+
+- [flowbite-svelte](https://flowbite-svelte.com/docs/pages/introduction)
