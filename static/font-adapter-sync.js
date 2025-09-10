@@ -11,7 +11,7 @@
 		designWidth: 375,
 		baseFont: 16,
 		minFont: 12,
-		maxFont: 20,
+		maxFont: 16,
 		enableDevLog: true
 	};
 	
