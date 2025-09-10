@@ -119,7 +119,6 @@ export function viteVConsole(options: VConsolePluginOptions = {}): Plugin {
 			});
 
 			if (!isTargetFile) {
-				console.log('[ VConsole Plugin ] Skipped - not target file');
 				return null;
 			}
 
