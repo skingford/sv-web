@@ -1,7 +1,9 @@
 <script lang="ts">
 	import type { PageData } from './$types';
-	import { Input, Button, Badge, Avatar, Card } from 'flowbite-svelte';
+	import { Input, Button, Badge, Avatar, Card, List, Li } from 'flowbite-svelte';
 	import { SearchOutline, UsersGroupOutline, LockSolid } from 'flowbite-svelte-icons';
+
+	const props: PageData = $props();
 
 	let searchQuery = $state('');
 	let selectedMembership = $state('all');
@@ -71,7 +73,7 @@
 </script>
 
 <svelte:head>
-	<title>People · {data.name} organization</title>
+	<title>People · {props.name}</title>
 </svelte:head>
 
 <div class="min-h-screen bg-[#0d1117] text-white">
@@ -141,32 +143,34 @@
 			<div class="flex-1">
 				<div class="space-y-3">
 					{#each filteredMembers as member}
-						<Card class="border-gray-700 bg-[#21262d] transition-colors hover:bg-[#2d333b]">
-							<div class="flex items-center justify-between">
-								<div class="flex items-center gap-4">
-									<!-- Avatar -->
-									<Avatar src={member.avatar} alt={member.username} class="h-12 w-12" />
+						<List tag="dl">
+							<Li class="mb-2">
+								<div class="flex items-center justify-between">
+									<div class="flex items-center gap-4">
+										<!-- Avatar -->
+										<Avatar src={member.avatar} alt={member.username} class="h-12 w-12" />
 
-									<!-- User info -->
-									<div>
-										<div class="flex items-center gap-2">
-											<span class="font-semibold text-blue-400">{member.displayName}</span>
-											{#if member.isPrivate}
-												<LockSolid class="h-3 w-3 text-gray-400" />
-												<span class="text-xs text-gray-400">Private</span>
-											{/if}
+										<!-- User info -->
+										<div>
+											<div class="flex items-center gap-2">
+												<span class="font-semibold text-blue-400">{member.displayName}</span>
+												{#if member.isPrivate}
+													<LockSolid class="h-3 w-3 text-gray-400" />
+													<span class="text-xs text-gray-400">Private</span>
+												{/if}
+											</div>
+											<div class="text-sm text-gray-300">{member.username}</div>
 										</div>
-										<div class="text-sm text-gray-300">{member.username}</div>
+									</div>
+
+									<!-- Member info -->
+									<div class="flex items-center gap-6 text-sm text-gray-400">
+										<span>{member.role}</span>
+										<span>{member.teams} teams</span>
 									</div>
 								</div>
-
-								<!-- Member info -->
-								<div class="flex items-center gap-6 text-sm text-gray-400">
-									<span>{member.role}</span>
-									<span>{member.teams} teams</span>
-								</div>
-							</div>
-						</Card>
+							</Li>
+						</List>
 					{/each}
 				</div>
 
