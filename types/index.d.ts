@@ -10,4 +10,7 @@
 // 自动导入的 API 类型
 /// <reference path="./auto-imports.d.ts" />
 
+// 环境变量类型
+/// <reference path="./env.d.ts" />
+
 export {};

@@ -5,8 +5,17 @@
 	"type": "module",
 	"scripts": {
 		"dev": "vite dev",
+		"dev:development": "vite dev --mode development",
+		"dev:production": "vite dev --mode production",
+		"dev:test": "vite dev --mode test",
 		"build": "vite build",
+		"build:development": "vite build --mode development",
+		"build:production": "vite build --mode production",
+		"build:test": "vite build --mode test",
 		"preview": "vite preview",
+		"preview:development": "vite preview --mode development",
+		"preview:production": "vite preview --mode production",
+		"preview:test": "vite preview --mode test",
 		"prepare": "husky",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
@@ -14,7 +23,10 @@
 		"lint": "prettier --check .",
 		"commitlint": "commitlint --edit",
 		"commitlint:last": "commitlint --from HEAD~1 --to HEAD --verbose",
-		"commitlint:ci": "commitlint --from ${{ github.event.before }} --to ${{ github.event.after }} --verbose"
+		"commitlint:ci": "commitlint --from ${{ github.event.before }} --to ${{ github.event.after }} --verbose",
+		"start:dev": "./scripts/run-mode.sh dev development",
+		"start:prod": "./scripts/run-mode.sh dev production",
+		"start:test": "./scripts/run-mode.sh dev test"
 	},
 	"devDependencies": {
 		"@commitlint/cli": "^19.8.1",
