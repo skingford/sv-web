@@ -60,5 +60,8 @@
 		"onlyBuiltDependencies": [
 			"esbuild"
 		]
+	},
+	"dependencies": {
+		"alova": "^3.3.4"
 	}
 }

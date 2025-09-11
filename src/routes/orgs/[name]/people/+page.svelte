@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import type { PageData } from './$types';
 
 	export let data: PageData;
@@ -7,6 +6,8 @@
 	// Mock data for demonstration - in real app this would come from your API
 	let searchQuery = '';
 	let selectedRole = 'all';
+	let selectedVisibility = 'all';
+
 	let people = [
 		{
 			id: 1,
@@ -15,7 +16,8 @@
 			avatar: 'https://avatars.githubusercontent.com/u/1?v=4',
 			role: 'Owner',
 			isPrivate: false,
-			teams: 0
+			teams: 0,
+			joinDate: '2023-01-15'
 		},
 		{
 			id: 2,
@@ -24,7 +26,8 @@
 			avatar: 'https://avatars.githubusercontent.com/u/2?v=4',
 			role: 'Member',
 			isPrivate: false,
-			teams: 0
+			teams: 2,
+			joinDate: '2023-03-22'
 		},
 		{
 			id: 3,
@@ -32,8 +35,9 @@
 			displayName: '何佳欣',
 			avatar: 'https://avatars.githubusercontent.com/u/3?v=4',
 			role: 'Member',
-			isPrivate: false,
-			teams: 0
+			isPrivate: true,
+			teams: 1,
+			joinDate: '2023-05-10'
 		},
 		{
 			id: 4,
@@ -42,7 +46,8 @@
 			avatar: 'https://avatars.githubusercontent.com/u/4?v=4',
 			role: 'Member',
 			isPrivate: false,
-			teams: 0
+			teams: 3,
+			joinDate: '2023-07-08'
 		},
 		{
 			id: 5,
@@ -51,7 +56,8 @@
 			avatar: 'https://avatars.githubusercontent.com/u/5?v=4',
 			role: 'Member',
 			isPrivate: false,
-			teams: 0
+			teams: 1,
+			joinDate: '2023-09-14'
 		},
 		{
 			id: 6,
@@ -59,8 +65,9 @@
 			displayName: '何佳欣',
 			avatar: 'https://avatars.githubusercontent.com/u/6?v=4',
 			role: 'Member',
-			isPrivate: false,
-			teams: 0
+			isPrivate: true,
+			teams: 0,
+			joinDate: '2023-11-03'
 		},
 		{
 			id: 7,
@@ -69,7 +76,8 @@
 			avatar: 'https://avatars.githubusercontent.com/u/7?v=4',
 			role: 'Member',
 			isPrivate: false,
-			teams: 0
+			teams: 2,
+			joinDate: '2024-01-20'
 		}
 	];
 
@@ -78,69 +86,97 @@
 			person.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
 			person.displayName.toLowerCase().includes(searchQuery.toLowerCase());
 		const matchesRole = selectedRole === 'all' || person.role.toLowerCase() === selectedRole;
-		return matchesSearch && matchesRole;
+		const matchesVisibility =
+			selectedVisibility === 'all' ||
+			(selectedVisibility === 'public' && !person.isPrivate) ||
+			(selectedVisibility === 'private' && person.isPrivate);
+		return matchesSearch && matchesRole && matchesVisibility;
 	});
 
 	$: memberCount = people.filter((p) => p.role === 'Member').length;
 	$: ownerCount = people.filter((p) => p.role === 'Owner').length;
+	$: publicMemberCount = people.filter((p) => !p.isPrivate).length;
+	$: privateMemberCount = people.filter((p) => p.isPrivate).length;
 </script>
 
 <svelte:head>
 	<title>People · {data.name}</title>
 </svelte:head>
 
-<div class="mx-auto max-w-7xl px-4 py-6">
-	<div class="flex flex-col gap-6 lg:flex-row">
+<div class="mx-auto max-w-[1280px] px-4 py-8 sm:px-6 lg:px-8">
+	<div class="flex flex-col gap-8 lg:flex-row">
 		<!-- Sidebar -->
 		<div class="w-full lg:w-80">
-			<div class="rounded-lg border border-gray-700 bg-[#161b22] p-4">
-				<h2 class="mb-4 text-lg font-semibold text-white">Organization permissions</h2>
+			<div class="rounded-md border border-[#30363d] bg-[#161b22] p-4">
+				<h2 class="mb-4 flex items-center gap-2 text-base font-semibold text-[#f0f6fc]">
+					<svg class="h-4 w-4" fill="currentColor" viewBox="0 0 16 16">
+						<path
+							d="M1.5 14.25c0-.788.31-1.547.863-2.1a2.972 2.972 0 0 1 2.1-.863H4.5c.788 0 1.547.31 2.1.863.552.553.863 1.312.863 2.1v.75a.75.75 0 0 1-1.5 0v-.75c0-.397-.158-.778-.44-1.06A1.5 1.5 0 0 0 4.5 12.75h-.037c-.397 0-.778.158-1.06.44A1.5 1.5 0 0 0 3 14.25v.75a.75.75 0 0 1-1.5 0v-.75ZM6 6.5a2.5 2.5 0 1 1 5 0 2.5 2.5 0 0 1-5 0ZM7.5 6.5a1 1 0 1 0 2 0 1 1 0 0 0-2 0ZM14 6.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0Zm-1.5 0a1 1 0 1 0-2 0 1 1 0 0 0 2 0Z"
+						/>
+					</svg>
+					Organization permissions
+				</h2>
 
 				<div class="space-y-3">
-					<div class="flex items-center justify-between">
-						<span class="text-gray-300">Members</span>
-						<span class="rounded-full bg-gray-700 px-2 py-1 text-xs text-gray-300"
-							>{memberCount}</span
-						>
+					<div class="flex items-center justify-between py-1">
+						<span class="text-sm text-[#8b949e]">Members</span>
+						<span class="rounded-full bg-[#21262d] px-2 py-0.5 text-xs text-[#8b949e]">
+							{memberCount}
+						</span>
 					</div>
-					<div class="flex items-center justify-between">
-						<span class="text-gray-300">Security Managers</span>
-						<span class="rounded-full bg-gray-700 px-2 py-1 text-xs text-gray-300">0</span>
+					<div class="flex items-center justify-between py-1">
+						<span class="text-sm text-[#8b949e]">Public members</span>
+						<span class="rounded-full bg-[#21262d] px-2 py-0.5 text-xs text-[#8b949e]">
+							{publicMemberCount}
+						</span>
+					</div>
+					<div class="flex items-center justify-between py-1">
+						<span class="text-sm text-[#8b949e]">Private members</span>
+						<span class="rounded-full bg-[#21262d] px-2 py-0.5 text-xs text-[#8b949e]">
+							{privateMemberCount}
+						</span>
+					</div>
+					<div class="flex items-center justify-between py-1">
+						<span class="text-sm text-[#8b949e]">Owners</span>
+						<span class="rounded-full bg-[#21262d] px-2 py-0.5 text-xs text-[#8b949e]">
+							{ownerCount}
+						</span>
 					</div>
 				</div>
 			</div>
 		</div>
 
 		<!-- Main content -->
-		<div class="flex-1">
+		<div class="min-w-0 flex-1">
 			<!-- Header -->
-			<div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+			<div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
 				<div>
-					<h1 class="text-2xl font-bold text-white">People</h1>
-					<p class="text-gray-400">
-						{filteredPeople.length} people in the {data.name} organization
+					<h1 class="text-2xl font-semibold text-[#f0f6fc]">People</h1>
+					<p class="mt-1 text-[#8b949e]">
+						{filteredPeople.length}
+						{filteredPeople.length === 1 ? 'person' : 'people'} in the {data.name} organization
 					</p>
 				</div>
 
-				<!-- Membership filter -->
-				<div class="flex items-center gap-2">
-					<span class="text-sm text-gray-400">Membership</span>
-					<select
-						bind:value={selectedRole}
-						class="rounded-md border border-gray-600 bg-[#21262d] px-3 py-1 text-sm text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
-					>
-						<option value="all">All roles</option>
-						<option value="owner">Owner</option>
-						<option value="member">Member</option>
-					</select>
-				</div>
+				<!-- Invite button -->
+				<button
+					class="flex items-center gap-2 rounded-md bg-[#238636] px-4 py-2 text-sm font-medium text-white hover:bg-[#2ea043] focus:ring-2 focus:ring-[#238636] focus:ring-offset-2 focus:ring-offset-[#0d1117] focus:outline-none"
+				>
+					<svg class="h-4 w-4" fill="currentColor" viewBox="0 0 16 16">
+						<path
+							d="M8 2a.75.75 0 0 1 .75.75v4.5h4.5a.75.75 0 0 1 0 1.5h-4.5v4.5a.75.75 0 0 1-1.5 0v-4.5h-4.5a.75.75 0 0 1 0-1.5h4.5v-4.5A.75.75 0 0 1 8 2Z"
+						/>
+					</svg>
+					Invite a member
+				</button>
 			</div>
 
-			<!-- Search -->
-			<div class="mb-6">
-				<div class="relative">
+			<!-- Filters -->
+			<div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+				<!-- Search -->
+				<div class="relative max-w-md flex-1">
 					<svg
-						class="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-400"
+						class="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-[#8b949e]"
 						fill="none"
 						stroke="currentColor"
 						viewBox="0 0 24 24"
@@ -156,72 +192,125 @@
 						type="text"
 						placeholder="Find a member..."
 						bind:value={searchQuery}
-						class="w-full rounded-md border border-gray-600 bg-[#0d1117] py-2 pr-4 pl-10 text-white placeholder-gray-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+						class="w-full rounded-md border border-[#30363d] bg-[#0d1117] py-2 pr-4 pl-10 text-sm text-[#f0f6fc] placeholder-[#8b949e] focus:border-[#58a6ff] focus:ring-1 focus:ring-[#58a6ff] focus:outline-none"
 					/>
+				</div>
+
+				<!-- Filter dropdowns -->
+				<div class="flex gap-3">
+					<div class="flex items-center gap-2">
+						<label for="role-filter" class="text-sm text-[#8b949e]">Role:</label>
+						<select
+							id="role-filter"
+							bind:value={selectedRole}
+							class="rounded-md border border-[#30363d] bg-[#21262d] px-3 py-1.5 text-sm text-[#f0f6fc] focus:border-[#58a6ff] focus:ring-1 focus:ring-[#58a6ff] focus:outline-none"
+						>
+							<option value="all">All roles</option>
+							<option value="owner">Owner</option>
+							<option value="member">Member</option>
+						</select>
+					</div>
+
+					<div class="flex items-center gap-2">
+						<label for="visibility-filter" class="text-sm text-[#8b949e]">Visibility:</label>
+						<select
+							id="visibility-filter"
+							bind:value={selectedVisibility}
+							class="rounded-md border border-[#30363d] bg-[#21262d] px-3 py-1.5 text-sm text-[#f0f6fc] focus:border-[#58a6ff] focus:ring-1 focus:ring-[#58a6ff] focus:outline-none"
+						>
+							<option value="all">All</option>
+							<option value="public">Public</option>
+							<option value="private">Private</option>
+						</select>
+					</div>
 				</div>
 			</div>
 
 			<!-- People list -->
-			<div class="space-y-0 overflow-hidden rounded-lg border border-gray-700">
-				{#each filteredPeople as person, index}
+			<div class="overflow-hidden rounded-md border border-[#30363d]">
+				{#each filteredPeople as person}
 					<div
-						class="flex items-center justify-between border-b border-gray-700 bg-[#0d1117] p-4 last:border-b-0 hover:bg-[#161b22]"
+						class="flex items-center justify-between border-b border-[#21262d] bg-[#0d1117] p-4 transition-colors last:border-b-0 hover:bg-[#161b22]"
 					>
-						<div class="flex items-center gap-3">
-							<img
-								src={person.avatar}
-								alt="{person.username} avatar"
-								class="h-10 w-10 rounded-full"
-							/>
-							<div>
+						<div class="flex items-center gap-4">
+							<a href="/{person.username}" class="flex-shrink-0">
+								<img
+									src={person.avatar}
+									alt="{person.username} avatar"
+									class="h-12 w-12 rounded-full ring-1 ring-[#30363d]"
+								/>
+							</a>
+							<div class="min-w-0 flex-1">
 								<div class="flex items-center gap-2">
-									<span class="font-medium text-white">{person.displayName}</span>
+									<a
+										href="/{person.username}"
+										class="font-semibold text-[#f0f6fc] hover:text-[#58a6ff]"
+									>
+										{person.displayName}
+									</a>
 									{#if person.isPrivate}
-										<svg class="h-4 w-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+										<svg class="h-4 w-4 text-[#8b949e]" fill="currentColor" viewBox="0 0 16 16">
 											<path
-												fill-rule="evenodd"
-												d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
-												clip-rule="evenodd"
-											></path>
+												d="M4 4a4 4 0 0 1 8 0v2h.25c.966 0 1.75.784 1.75 1.75v5.5A1.75 1.75 0 0 1 12.25 15h-8.5A1.75 1.75 0 0 1 2 13.25v-5.5C2 6.784 2.784 6 3.75 6H4Zm8.25 3.5h-8.5a.25.25 0 0 0-.25.25v5.5c0 .138.112.25.25.25h8.5a.25.25 0 0 0 .25-.25v-5.5a.25.25 0 0 0-.25-.25ZM10.5 6V4a2.5 2.5 0 1 0-5 0v2Z"
+											/>
 										</svg>
-										<span class="text-xs text-gray-400">Private</span>
 									{/if}
 								</div>
-								<div class="text-sm text-gray-400">{person.username}</div>
+								<div class="flex items-center gap-2 text-sm text-[#8b949e]">
+									<span>{person.username}</span>
+									{#if person.isPrivate}
+										<span class="text-xs">• Private member</span>
+									{/if}
+								</div>
 							</div>
 						</div>
 
-						<div class="flex items-center gap-4">
-							<div class="flex items-center gap-2 text-sm text-gray-400">
-								{#if person.isPrivate}
-									<svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
-										<path
-											fill-rule="evenodd"
-											d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
-											clip-rule="evenodd"
-										></path>
-									</svg>
-									<span>Private</span>
-								{/if}
-							</div>
-
+						<div class="flex items-center gap-6">
+							<!-- Role badge -->
 							<div class="flex items-center gap-2">
-								<span class="rounded-full bg-green-900 px-2 py-1 text-xs text-green-300">
+								<span
+									class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium {person.role ===
+									'Owner'
+										? 'bg-[#7c3aed]/10 text-[#a855f7]'
+										: 'bg-[#238636]/10 text-[#3fb950]'}"
+								>
 									{person.role}
 								</span>
-								<span class="text-sm text-gray-400">{person.teams} teams</span>
+							</div>
+
+							<!-- Teams count -->
+							<div class="flex items-center gap-1 text-sm text-[#8b949e]">
+								<svg class="h-4 w-4" fill="currentColor" viewBox="0 0 16 16">
+									<path
+										d="M1.5 14.25c0-.788.31-1.547.863-2.1a2.972 2.972 0 0 1 2.1-.863H4.5c.788 0 1.547.31 2.1.863.552.553.863 1.312.863 2.1v.75a.75.75 0 0 1-1.5 0v-.75c0-.397-.158-.778-.44-1.06A1.5 1.5 0 0 0 4.5 12.75h-.037c-.397 0-.778.158-1.06.44A1.5 1.5 0 0 0 3 14.25v.75a.75.75 0 0 1-1.5 0v-.75ZM6 6.5a2.5 2.5 0 1 1 5 0 2.5 2.5 0 0 1-5 0ZM7.5 6.5a1 1 0 1 0 2 0 1 1 0 0 0-2 0ZM14 6.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0Zm-1.5 0a1 1 0 1 0-2 0 1 1 0 0 0 2 0Z"
+									/>
+								</svg>
+								<span>{person.teams} {person.teams === 1 ? 'team' : 'teams'}</span>
+							</div>
+
+							<!-- More options -->
+							<div class="relative">
+								<button
+									class="rounded-md p-1 text-[#8b949e] hover:bg-[#21262d] hover:text-[#f0f6fc]"
+								>
+									<svg class="h-4 w-4" fill="currentColor" viewBox="0 0 16 16">
+										<path
+											d="M8 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3ZM1.5 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Zm13 0a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z"
+										/>
+									</svg>
+								</button>
 							</div>
 						</div>
 					</div>
 				{/each}
 
 				{#if filteredPeople.length === 0}
-					<div class="p-8 text-center">
+					<div class="p-12 text-center">
 						<div
-							class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-800"
+							class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#21262d]"
 						>
 							<svg
-								class="h-8 w-8 text-gray-400"
+								class="h-8 w-8 text-[#8b949e]"
 								fill="none"
 								stroke="currentColor"
 								viewBox="0 0 24 24"
@@ -234,8 +323,8 @@
 								></path>
 							</svg>
 						</div>
-						<h3 class="mb-2 text-lg font-medium text-white">No people found</h3>
-						<p class="text-gray-400">
+						<h3 class="mb-2 text-lg font-semibold text-[#f0f6fc]">No people found</h3>
+						<p class="text-[#8b949e]">
 							Try adjusting your search or filter to find what you're looking for.
 						</p>
 					</div>
