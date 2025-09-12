@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { PageData } from './$types';
 
-	export let data: PageData;
+	let { data }: { data: PageData } = $props();
 
 	// Mock data for demonstration - in real app this would come from your API
 	let searchQuery = '';
@@ -81,22 +81,24 @@
 		}
 	];
 
-	$: filteredPeople = people.filter((person) => {
-		const matchesSearch =
-			person.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
-			person.displayName.toLowerCase().includes(searchQuery.toLowerCase());
-		const matchesRole = selectedRole === 'all' || person.role.toLowerCase() === selectedRole;
-		const matchesVisibility =
-			selectedVisibility === 'all' ||
-			(selectedVisibility === 'public' && !person.isPrivate) ||
-			(selectedVisibility === 'private' && person.isPrivate);
-		return matchesSearch && matchesRole && matchesVisibility;
-	});
+	let filteredPeople = $derived(
+		people.filter((person) => {
+			const matchesSearch =
+				person.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
+				person.displayName.toLowerCase().includes(searchQuery.toLowerCase());
+			const matchesRole = selectedRole === 'all' || person.role.toLowerCase() === selectedRole;
+			const matchesVisibility =
+				selectedVisibility === 'all' ||
+				(selectedVisibility === 'public' && !person.isPrivate) ||
+				(selectedVisibility === 'private' && person.isPrivate);
+			return matchesSearch && matchesRole && matchesVisibility;
+		})
+	);
 
-	$: memberCount = people.filter((p) => p.role === 'Member').length;
-	$: ownerCount = people.filter((p) => p.role === 'Owner').length;
-	$: publicMemberCount = people.filter((p) => !p.isPrivate).length;
-	$: privateMemberCount = people.filter((p) => p.isPrivate).length;
+	let memberCount = $derived(people.filter((p) => p.role === 'Member').length);
+	let ownerCount = $derived(people.filter((p) => p.role === 'Owner').length);
+	let publicMemberCount = $derived(people.filter((p) => !p.isPrivate).length);
+	let privateMemberCount = $derived(people.filter((p) => p.isPrivate).length);
 </script>
 
 <svelte:head>

@@ -2,8 +2,17 @@
 	import '../app.css';
 	import '$lib/styles/globals.scss';
 	import favicon from '$lib/assets/favicon.svg';
+	import { initAuth } from '$lib/stores/auth';
+	import type { LayoutData } from './$types';
 
-	let { children } = $props();
+	let { children, data }: { children: any; data: LayoutData } = $props();
+
+	// Initialize auth store with user data from locals
+	$effect(() => {
+		if (data) {
+			initAuth(data.user || null);
+		}
+	});
 </script>
 
 <svelte:head>

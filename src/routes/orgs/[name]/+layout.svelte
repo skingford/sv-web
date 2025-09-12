@@ -1,14 +1,10 @@
 <script lang="ts">
 	import type { LayoutData } from './$types';
-	import { page } from '$app/stores';
 
-	export let data: LayoutData;
-
-	// Get current path to highlight corresponding navigation item
-	$: currentPath = $page.url.pathname;
+	let { data, children }: { data: LayoutData; children: any } = $props();
 
 	// Mock data - replace with real API data
-	$: orgData = {
+	let orgData = $derived(() => ({
 		name: data.name,
 		description: 'Building the future of software development',
 		website: 'https://github.com',
@@ -18,10 +14,10 @@
 		publicRepos: 1234,
 		followers: 56789,
 		following: 123
-	};
+	}));
 
 	// Navigation items with icons and counts
-	$: navItems = [
+	let navItems = $derived(() => [
 		{
 			href: `/orgs/${data.name}`,
 			label: 'Overview',
@@ -32,7 +28,7 @@
 			href: `/orgs/${data.name}/repositories`,
 			label: 'Repositories',
 			icon: 'repo',
-			count: orgData.publicRepos
+			count: orgData().publicRepos
 		},
 		{
 			href: `/orgs/${data.name}/people`,
@@ -63,9 +59,12 @@
 			label: 'Settings',
 			icon: 'settings'
 		}
-	];
+	]);
 
 	function isActiveTab(item: any): boolean {
+		if (typeof window === 'undefined') return false;
+		const currentPath = window.location.pathname;
+
 		if (item.exact) {
 			return currentPath === item.href;
 		}
@@ -95,7 +94,7 @@
 					<div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4">
 						<div class="flex items-center gap-2">
 							<h1 class="text-2xl font-semibold text-[#f0f6fc] sm:text-3xl">{data.name}</h1>
-							{#if orgData.verified}
+							{#if orgData().verified}
 								<svg class="h-5 w-5 text-[#3fb950]" fill="currentColor" viewBox="0 0 16 16">
 									<path
 										fill-rule="evenodd"
@@ -126,40 +125,43 @@
 						</div>
 					</div>
 
-					{#if orgData.description}
-						<p class="mt-2 text-[#8b949e]">{orgData.description}</p>
+					{#if orgData().description}
+						<p class="mt-2 text-[#8b949e]">{orgData().description}</p>
 					{/if}
 
 					<!-- Organization metadata -->
 					<div class="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-sm text-[#8b949e]">
-						{#if orgData.website}
-							<a href={orgData.website} class="flex items-center gap-1 hover:text-[#58a6ff]">
+						{#if orgData().website}
+							<a href={orgData().website} class="flex items-center gap-1 hover:text-[#58a6ff]">
 								<svg class="h-4 w-4" fill="currentColor" viewBox="0 0 16 16">
 									<path
 										d="M7.775 3.275a.75.75 0 0 0 1.06 1.06l1.25-1.25a2 2 0 1 1 2.83 2.83l-2.5 2.5a2 2 0 0 1-2.83 0 .75.75 0 0 0-1.06 1.06 3.5 3.5 0 0 0 4.95 0l2.5-2.5a3.5 3.5 0 0 0-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 0 1 0-2.83l2.5-2.5a2 2 0 0 1 2.83 0 .75.75 0 0 0 1.06-1.06 3.5 3.5 0 0 0-4.95 0l-2.5 2.5a3.5 3.5 0 0 0 4.95 4.95l1.25-1.25a.75.75 0 0 0-1.06-1.06l-1.25 1.25a2 2 0 0 1-2.83 0z"
 									/>
 								</svg>
-								{orgData.website.replace(/^https?:\/\//, '')}
+								{orgData().website.replace(/^https?:\/\//, '')}
 							</a>
 						{/if}
-						{#if orgData.location}
+						{#if orgData().location}
 							<span class="flex items-center gap-1">
 								<svg class="h-4 w-4" fill="currentColor" viewBox="0 0 16 16">
 									<path
 										d="m12.596 11.596-3.535 3.536a1.5 1.5 0 0 1-2.122 0l-3.535-3.536a6.5 6.5 0 1 1 9.192-9.193 6.5 6.5 0 0 1 0 9.193Zm-1.06-8.132v-.001a5 5 0 1 0-7.072 7.072L8 14.07l3.536-3.534a5 5 0 0 0 0-7.072ZM8 9a2 2 0 1 1-.001-3.999A2 2 0 0 1 8 9Z"
 									/>
 								</svg>
-								{orgData.location}
+								{orgData().location}
 							</span>
 						{/if}
-						{#if orgData.email}
-							<a href="mailto:{orgData.email}" class="flex items-center gap-1 hover:text-[#58a6ff]">
+						{#if orgData().email}
+							<a
+								href="mailto:{orgData().email}"
+								class="flex items-center gap-1 hover:text-[#58a6ff]"
+							>
 								<svg class="h-4 w-4" fill="currentColor" viewBox="0 0 16 16">
 									<path
 										d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414.05 3.555ZM0 4.697v7.104l5.803-3.558L0 4.697ZM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586l-1.239-.757Zm3.436-.586L16 11.801V4.697l-5.803 3.546Z"
 									/>
 								</svg>
-								{orgData.email}
+								{orgData().email}
 							</a>
 						{/if}
 						<span class="flex items-center gap-1">
@@ -169,18 +171,21 @@
 									d="M1.5 8a6.5 6.5 0 1 1 13 0 6.5 6.5 0 0 1-13 0ZM8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0Z"
 								/>
 							</svg>
-							{orgData.followers.toLocaleString()} followers
+							{orgData().followers.toLocaleString()} followers
 						</span>
 						<span class="flex items-center gap-1">
-							{orgData.following.toLocaleString()} following
+							{orgData().following.toLocaleString()} following
 						</span>
 					</div>
 				</div>
 			</div>
 
 			<!-- Navigation tabs -->
-			<nav class="flex overflow-x-auto border-b border-[#21262d]" role="tablist">
-				{#each navItems as item}
+			<nav
+				class="flex overflow-x-auto border-b border-[#21262d]"
+				aria-label="Organization navigation"
+			>
+				{#each navItems() as item}
 					<a
 						href={item.href}
 						class="flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-medium whitespace-nowrap transition-colors {isActiveTab(
@@ -188,8 +193,7 @@
 						)
 							? 'border-[#fd7e14] text-[#f0f6fc]'
 							: 'border-transparent text-[#8b949e] hover:border-[#6e7681] hover:text-[#f0f6fc]'}"
-						role="tab"
-						aria-selected={isActiveTab(item)}
+						aria-current={isActiveTab(item) ? 'page' : undefined}
 					>
 						<!-- Tab icons -->
 						{#if item.icon === 'overview'}
@@ -250,5 +254,5 @@
 	</div>
 
 	<!-- Page content -->
-	<slot />
+	{@render children()}
 </div>

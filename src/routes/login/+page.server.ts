@@ -1,8 +1,16 @@
 import { fail, redirect } from '@sveltejs/kit';
-import type { Actions } from './$types';
+import { authenticateUser, createSession, redirectIfAuthenticated } from '$lib/auth';
+import type { Actions, PageServerLoad } from './$types';
+
+export const load: PageServerLoad = async (event) => {
+	// Redirect if already authenticated
+	await redirectIfAuthenticated(event);
+
+	return {};
+};
 
 export const actions: Actions = {
-	default: async ({ request, cookies }) => {
+	default: async ({ request, cookies, url }) => {
 		const data = await request.formData();
 		const email = data.get('email') as string;
 		const password = data.get('password') as string;
@@ -34,27 +42,31 @@ export const actions: Actions = {
 		}
 
 		try {
-			// TODO: Replace with your actual authentication logic
-			// This is a mock authentication - replace with your auth service
-			if (email === 'demo@example.com' && password === 'password') {
-				// Set session cookie
-				const sessionId = crypto.randomUUID();
-				cookies.set('session', sessionId, {
-					path: '/',
-					httpOnly: true,
-					secure: process.env.NODE_ENV === 'production',
-					sameSite: 'strict',
-					maxAge: rememberMe ? 60 * 60 * 24 * 30 : 60 * 60 * 24 // 30 days or 1 day
-				});
+			// Authenticate user
+			const user = await authenticateUser(email, password);
 
-				// Redirect to dashboard or home page
-				throw redirect(302, '/dashboard');
-			} else {
+			if (!user) {
 				return fail(401, {
 					error: 'Invalid email or password',
 					email
 				});
 			}
+
+			// Create session
+			const sessionId = await createSession(user);
+
+			// Set session cookie
+			cookies.set('session', sessionId, {
+				path: '/',
+				httpOnly: true,
+				secure: process.env.NODE_ENV === 'production',
+				sameSite: 'strict',
+				maxAge: rememberMe ? 60 * 60 * 24 * 30 : 60 * 60 * 24 // 30 days or 1 day
+			});
+
+			// Redirect to intended page or dashboard
+			const redirectTo = url.searchParams.get('redirect') || '/dashboard';
+			throw redirect(302, redirectTo);
 		} catch (error) {
 			if (error instanceof Response) {
 				throw error; // Re-throw redirect

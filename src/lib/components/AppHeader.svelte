@@ -1,13 +1,8 @@
 <script lang="ts">
-	import { page } from '$app/stores';
+	import { user, isAuthenticated, logout } from '$lib/stores/auth';
 
-	// Mock user data - replace with real authentication state
-	let isSignedIn = true;
-	let user = {
-		username: 'octocat',
-		avatar: 'https://github.com/octocat.png',
-		notifications: 3
-	};
+	// Mock notifications count - replace with real data
+	let notifications = 3;
 
 	// Navigation items
 	const navItems = [
@@ -31,7 +26,7 @@
 		{ type: 'organization', name: 'github', description: 'GitHub' }
 	];
 
-	$: showSearchSuggestions = searchQuery.length > 0;
+	let showSearchSuggestions = $derived(searchQuery.length > 0);
 </script>
 
 <header class="AppHeader">
@@ -166,7 +161,7 @@
 			</div>
 
 			<!-- User Actions -->
-			{#if isSignedIn}
+			{#if $isAuthenticated && $user}
 				<div class="AppHeader-user">
 					<!-- Create Menu -->
 					<div class="AppHeader-user-item">
@@ -254,8 +249,8 @@
 									d="M8 16a2 2 0 0 0 1.985-1.75c.017-.137-.097-.25-.235-.25h-3.5c-.138 0-.252.113-.235.25A2 2 0 0 0 8 16ZM3 5a5 5 0 0 1 10 0v2.947c0 .05.015.098.042.139l1.703 2.555A.482.482 0 0 1 14.3 11.5H1.7a.482.482 0 0 1-.445-.859l1.703-2.555A.25.25 0 0 0 3 8.947V5Z"
 								></path>
 							</svg>
-							{#if user.notifications > 0}
-								<span class="AppHeader-button-indicator">{user.notifications}</span>
+							{#if notifications > 0}
+								<span class="AppHeader-button-indicator">{notifications}</span>
 							{/if}
 						</button>
 					</div>
@@ -267,7 +262,12 @@
 							aria-label="View profile and more"
 							on:click={() => (showUserMenu = !showUserMenu)}
 						>
-							<img src={user.avatar} alt="@{user.username}" width="20" height="20" />
+							<img
+								src={$user.avatar || 'https://github.com/octocat.png'}
+								alt="@{$user.username}"
+								width="20"
+								height="20"
+							/>
 							<svg
 								aria-hidden="true"
 								height="16"
