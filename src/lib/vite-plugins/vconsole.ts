@@ -134,7 +134,9 @@ export function viteVConsole(options: VConsolePluginOptions = {}): Plugin {
 	if (typeof window !== 'undefined' && import.meta.env.DEV) {
 		import('vconsole').then(({ default: VConsole }) => {
 			new VConsole({
-				maxLogNumber: ${maxLogNumber},
+				log: {
+					maxLogNumber: ${maxLogNumber}
+				},
 				theme: '${theme}'
 			});
 			console.log('VConsole loaded by plugin!');
