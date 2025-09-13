@@ -1,5 +1,5 @@
 import { redirect, type Handle } from '@sveltejs/kit';
-import { getUserFromRequest } from '$lib/auth';
+import { getUserFromRequest, isAdmin } from '$lib/auth';
 
 // Define protected routes that require authentication
 const protectedRoutes = [
@@ -32,39 +32,17 @@ export const handle: Handle = async ({ event, resolve }) => {
 
 	const { pathname } = event.url;
 
-	// Get user from session
-	const user = await getUserFromRequest(event);
+	// 现阶段：主要使用客户端认证，服务端暂时不进行认证检查
+	// 后续可以通过 JWT token 或其他方式在服务端验证认证状态
+	const user = null; // 暂时设为 null，让客户端处理认证
 
-	console.log(`[hooks.server.ts] 用户: ${user?.email}`);
+	console.log(`[hooks.server.ts] 用户: 未设置`);
 
 	// Add user to locals for use in load functions and pages
 	event.locals.user = user;
 
-	// Handle protected routes
-	if (matchesRoute(pathname, protectedRoutes)) {
-		if (!user) {
-			const redirectUrl = `/login?redirect=${encodeURIComponent(pathname)}`;
-			throw redirect(302, redirectUrl);
-		}
-	}
-
-	// Handle admin routes
-	if (matchesRoute(pathname, adminRoutes)) {
-		if (!user) {
-			const redirectUrl = `/login?redirect=${encodeURIComponent(pathname)}`;
-			throw redirect(302, redirectUrl);
-		}
-		if (user.role !== 'admin') {
-			throw redirect(302, '/unauthorized');
-		}
-	}
-
-	// Handle public routes (redirect if already authenticated)
-	if (matchesRoute(pathname, publicRoutes) && user) {
-		// Check for redirect parameter
-		const redirectTo = event.url.searchParams.get('redirect') || '/dashboard';
-		throw redirect(302, redirectTo);
-	}
+	// 现阶段：不进行服务端认证检查，让客户端路由守卫处理
+	// 后续可以实现服务端认证检查
 
 	const response = await resolve(event);
 	return response;

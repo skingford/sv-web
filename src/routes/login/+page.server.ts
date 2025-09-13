@@ -1,82 +1,17 @@
-import { fail, redirect } from '@sveltejs/kit';
-import { authenticateUser, createSession, redirectIfAuthenticated } from '$lib/auth';
 import type { Actions, PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async (event) => {
-	// Redirect if already authenticated
-	await redirectIfAuthenticated(event);
-
+	// 现阶段：服务端不进行认证检查，让客户端处理重定向逻辑
+	// 后续可以通过 JWT token 或其他方式在服务端检查认证状态
 	return {};
 };
 
 export const actions: Actions = {
-	default: async ({ request, cookies, url }) => {
-		const data = await request.formData();
-		const email = data.get('email') as string;
-		const password = data.get('password') as string;
-		const rememberMe = data.get('remember-me') === 'on';
-
-		// Basic validation
-		if (!email || !password) {
-			return fail(400, {
-				error: 'Email and password are required',
-				email
-			});
-		}
-
-		// Email validation
-		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-		if (!emailRegex.test(email)) {
-			return fail(400, {
-				error: 'Please enter a valid email address',
-				email
-			});
-		}
-
-		// Password validation
-		if (password.length < 6) {
-			return fail(400, {
-				error: 'Password must be at least 6 characters long',
-				email
-			});
-		}
-
-		try {
-			// Authenticate user
-			const user = await authenticateUser(email, password);
-
-			if (!user) {
-				return fail(401, {
-					error: 'Invalid email or password',
-					email
-				});
-			}
-
-			// Create session
-			const sessionId = await createSession(user);
-
-			// Set session cookie
-			cookies.set('session', sessionId, {
-				path: '/',
-				httpOnly: true,
-				secure: process.env.NODE_ENV === 'production',
-				sameSite: 'strict',
-				maxAge: rememberMe ? 60 * 60 * 24 * 30 : 60 * 60 * 24 // 30 days or 1 day
-			});
-
-			// Redirect to intended page or dashboard
-			const redirectTo = url.searchParams.get('redirect') || '/dashboard';
-			throw redirect(302, redirectTo);
-		} catch (error) {
-			if (error instanceof Response) {
-				throw error; // Re-throw redirect
-			}
-
-			console.error('Login error:', error);
-			return fail(500, {
-				error: 'An error occurred during login. Please try again.',
-				email
-			});
-		}
+	default: async ({ request }) => {
+		// 现阶段：主要使用客户端认证，服务端 actions 暂时不处理登录
+		// 后续可以实现服务端登录逻辑
+		return {
+			error: 'Please use the client-side login form'
+		};
 	}
 };

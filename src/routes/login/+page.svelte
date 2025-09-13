@@ -2,6 +2,8 @@
 	import { goto } from '$app/navigation';
 	import { login } from '$lib/api/auth';
 	import type { LoginReq } from '$lib/api';
+	import { saveAuthData } from '$lib/auth';
+	import { user } from '$lib/stores/auth';
 	import { localCache, LoginInfoCacheKey } from '$lib/utils/cache';
 
 	// export let form: ActionData;
@@ -32,10 +34,20 @@
 
 			console.log('登录成功:', data);
 
-			localCache.set(LoginInfoCacheKey, data, {
-				ttl: data.expires_in,
-				encrypt: true
-			});
+			// 构建用户信息
+			const userInfo = {
+				id: data.id,
+				email: form.username, // 使用用户名作为邮箱
+				username: form.username,
+				accessToken: data.access_token,
+				expiresIn: data.expires_in
+			};
+
+			// 保存认证信息到缓存
+			saveAuthData(userInfo, data.access_token, data.expires_in);
+
+			// 更新 store
+			user.set(userInfo);
 
 			// 跳转到首页
 			goto('/dashboard');

@@ -12,7 +12,7 @@
 	<div class="mx-auto max-w-7xl">
 		<div class="mb-8">
 			<h1 class="mb-2 text-3xl font-bold text-[#f0f6fc]">Admin Dashboard</h1>
-			<p class="text-[#8b949e]">Welcome back, {data.user.username}!</p>
+			<p class="text-[#8b949e]">Welcome back, {(data.user as any)?.username || 'Admin'}!</p>
 		</div>
 
 		<div class="mb-8 grid grid-cols-1 gap-6 md:grid-cols-3">

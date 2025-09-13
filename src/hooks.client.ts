@@ -1,7 +1,8 @@
 import { browser } from '$app/environment';
 import { goto } from '$app/navigation';
 import { get } from 'svelte/store';
-import { clearAuth, user } from '$lib/stores/auth';
+import { clearAuth, user, initAuthFromCache } from '$lib/stores/auth';
+import { isUserLoggedIn, hasRole, isAdmin } from '$lib/auth';
 import type { HandleClientError } from '@sveltejs/kit';
 import type { User } from '$lib/auth';
 
@@ -95,22 +96,22 @@ function checkRouteAccess(pathname: string, currentUser: User | null): boolean {
 		return true;
 	}
 
-	// 检查认证要求
-	if (config.requiresAuth && !currentUser) {
+	// 检查认证要求 - 使用新的登录检查逻辑
+	if (config.requiresAuth && !isUserLoggedIn()) {
 		console.log(`[hooks.client.ts] 未登录用户尝试访问受保护路由: ${pathname}`);
 		navigateToLogin(pathname);
 		return false;
 	}
 
-	// 检查管理员权限
-	if (config.requiresAdmin && (!currentUser || currentUser.role !== 'admin')) {
+	// 检查管理员权限 - 使用新的角色检查逻辑
+	if (config.requiresAdmin && !isAdmin()) {
 		console.log(`[hooks.client.ts] 权限不足，尝试访问管理员路由: ${pathname}`);
 		goto('/unauthorized');
 		return false;
 	}
 
 	// 检查是否需要重定向已登录用户
-	if (config.redirectIfAuthenticated && currentUser) {
+	if (config.redirectIfAuthenticated && isUserLoggedIn()) {
 		console.log(`[hooks.client.ts] 已登录用户访问公共路由，重定向: ${pathname}`);
 		const urlParams = new URLSearchParams(window.location.search);
 		const redirectTo = urlParams.get('redirect') || '/dashboard';
@@ -349,6 +350,9 @@ function initClientHooks() {
 	if (!browser) return;
 
 	console.log('[hooks.client.ts] 初始化客户端钩子');
+
+	// 初始化认证状态从缓存
+	initAuthFromCache();
 
 	// 设置各种监听器
 	const unsubscribeRouteGuard = setupClientRouteGuard();

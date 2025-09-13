@@ -18,7 +18,7 @@
 		password: ''
 	};
 
-	let isLoading = false;
+	let isLoading = $state(false);
 
 	function validateUsername(username: string) {
 		if (!username) return 'Username is required';
