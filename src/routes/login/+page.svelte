@@ -2,7 +2,7 @@
 	import { goto } from '$app/navigation';
 	import { login } from '$lib/api/auth';
 	import type { LoginReq } from '$lib/api/auth';
-	import { localCache } from '$lib/utils/cache';
+	import { localCache, LoginInfoCacheKey } from '$lib/utils/cache';
 
 	// export let form: ActionData;
 
@@ -32,7 +32,7 @@
 
 			console.log('登录成功:', data);
 
-			localCache.set('auth_data', data, {
+			localCache.set(LoginInfoCacheKey, data, {
 				ttl: data.expires_in,
 				encrypt: true
 			});
