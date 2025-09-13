@@ -216,7 +216,8 @@ export class LocalCache {
 			data: finalData,
 			expiresAt: now + ttl * 1000, // Convert seconds to milliseconds
 			createdAt: now,
-			isString
+			isString,
+			isEncrypted: encrypt
 		};
 
 		try {
@@ -265,8 +266,21 @@ export class LocalCache {
 				return null;
 			}
 
-			// Decrypt and parse data
-			const rawData = encrypt ? this.decrypt(parsedItem.data) : parsedItem.data;
+			// Use the stored encryption flag to determine if data needs decryption
+			let rawData: string;
+			try {
+				if (parsedItem.isEncrypted) {
+					// Data was encrypted when stored, try to decrypt
+					rawData = this.decrypt(parsedItem.data);
+				} else {
+					// Data was not encrypted when stored, use as-is
+					rawData = parsedItem.data;
+				}
+			} catch (decryptError) {
+				// If decryption fails, try to use the data as-is (might be unencrypted)
+				console.warn(`Decryption failed for key "${key}", trying unencrypted data:`, decryptError);
+				rawData = parsedItem.data;
+			}
 
 			// Optimize: if the original data was a string, return it directly
 			if (parsedItem.isString === true) {

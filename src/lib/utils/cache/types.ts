@@ -4,6 +4,7 @@ export interface CacheItem {
 	expiresAt: number;
 	createdAt: number;
 	isString: boolean; // Track if original data was a string
+	isEncrypted: boolean; // Track if data is encrypted
 }
 
 // 基础缓存选项接口
