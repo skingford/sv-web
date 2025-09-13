@@ -4,9 +4,9 @@
 	let { data }: { data: PageData } = $props();
 
 	// Mock data for demonstration - in real app this would come from your API
-	let searchQuery = '';
-	let selectedRole = 'all';
-	let selectedVisibility = 'all';
+	let searchQuery = $state('');
+	let selectedRole = $state('all');
+	let selectedVisibility = $state('all');
 
 	let people = [
 		{
@@ -294,6 +294,7 @@
 							<div class="relative">
 								<button
 									class="rounded-md p-1 text-[#8b949e] hover:bg-[#21262d] hover:text-[#f0f6fc]"
+									aria-label="More options"
 								>
 									<svg class="h-4 w-4" fill="currentColor" viewBox="0 0 16 16">
 										<path

@@ -27,7 +27,7 @@
 				<div class="flex items-center space-x-4">
 					<span class="text-sm text-gray-700">Welcome back!</span>
 					<button
-						on:click={logout}
+						onclick={logout}
 						class="text-sm text-gray-500 transition-colors hover:text-gray-700"
 					>
 						Sign out

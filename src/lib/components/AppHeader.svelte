@@ -14,8 +14,8 @@
 		{ label: 'Pricing', href: '/pricing' }
 	];
 
-	let searchQuery = '';
-	let showMobileMenu = false;
+	let searchQuery = $state('');
+	let showMobileMenu = $state(false);
 	let showUserMenu = false;
 	let showNotifications = false;
 
@@ -235,7 +235,7 @@
 						<button
 							class="AppHeader-button AppHeader-button--hasIndicator"
 							aria-label="Notifications"
-							on:click={() => (showNotifications = !showNotifications)}
+							onclick={() => (showNotifications = !showNotifications)}
 						>
 							<svg
 								aria-hidden="true"
@@ -260,7 +260,7 @@
 						<button
 							class="AppHeader-user-avatar"
 							aria-label="View profile and more"
-							on:click={() => (showUserMenu = !showUserMenu)}
+							onclick={() => (showUserMenu = !showUserMenu)}
 						>
 							<img
 								src={$user.avatar || 'https://github.com/octocat.png'}
@@ -295,7 +295,7 @@
 			<button
 				class="AppHeader-button AppHeader-button--mobile"
 				aria-label="Toggle navigation"
-				on:click={() => (showMobileMenu = !showMobileMenu)}
+				onclick={() => (showMobileMenu = !showMobileMenu)}
 			>
 				<svg
 					aria-hidden="true"

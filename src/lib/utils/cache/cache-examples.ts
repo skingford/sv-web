@@ -2,7 +2,8 @@
  * Examples of using the Local Caching Tool
  */
 
-import { cache, sessionCache, LocalCache, cacheUtils, type CacheOptions } from './storage';
+import { cache, sessionCache, LocalCache, cacheUtils } from './storage';
+import type { CacheOptions } from './local_cache';
 
 // Example 1: Basic usage with automatic expiration
 export function basicCacheExample() {
