@@ -2,6 +2,7 @@ interface CacheItem {
 	data: string; // encrypted data
 	expiresAt: number;
 	createdAt: number;
+	isString: boolean; // Track if original data was a string
 }
 
 interface CacheOptions {
@@ -16,6 +17,11 @@ export class LocalCache {
 	private storage: Storage;
 
 	constructor(encryptionKey?: string, defaultStorage: Storage = localStorage) {
+		// Check if we're in a browser environment
+		if (typeof window === 'undefined' || typeof localStorage === 'undefined') {
+			throw new Error('LocalCache can only be used in browser environments');
+		}
+
 		this.encryptionKey = encryptionKey || this.getOrCreatePersistentKey();
 		this.storage = defaultStorage;
 	}
@@ -63,8 +69,9 @@ export class LocalCache {
 	 * This is a fallback when localStorage is not available
 	 */
 	private generateDeterministicKey(): string {
-		const userAgent = navigator.userAgent;
-		const domain = window.location.hostname;
+		// Fallback for when localStorage is not available but we're still in browser
+		const userAgent = typeof navigator !== 'undefined' ? navigator.userAgent : 'unknown';
+		const domain = typeof window !== 'undefined' ? window.location.hostname : 'localhost';
 		const combined = `${userAgent}-${domain}`;
 
 		// Simple hash function
@@ -201,7 +208,9 @@ export class LocalCache {
 			throw new Error('TTL must be a positive number');
 		}
 
-		const serializedData = JSON.stringify(data);
+		// Optimize: if data is already a string, don't stringify it
+		const isString = typeof data === 'string';
+		const serializedData = isString ? data : JSON.stringify(data);
 
 		// Check storage quota before setting
 		const estimatedSize = serializedData.length * 2; // Rough estimate for encrypted data
@@ -216,7 +225,8 @@ export class LocalCache {
 		const cacheItem: CacheItem = {
 			data: finalData,
 			expiresAt: now + ttl,
-			createdAt: now
+			createdAt: now,
+			isString
 		};
 
 		try {
@@ -241,10 +251,11 @@ export class LocalCache {
 				`Failed to cache data for key: ${key}. ${error instanceof Error ? error.message : 'Unknown error'}`
 			);
 		}
-	} /**
- 
-  * Get data from cache with automatic decryption and expiration check
-   */
+	}
+
+	/**
+	 * Get data from cache with automatic decryption and expiration check
+	 */
 	get<T>(key: string, options: Omit<CacheOptions, 'ttl'> = {}): T | null {
 		const { encrypt = true, storage = this.storage } = options;
 
@@ -266,7 +277,18 @@ export class LocalCache {
 
 			// Decrypt and parse data
 			const rawData = encrypt ? this.decrypt(parsedItem.data) : parsedItem.data;
-			return JSON.parse(rawData);
+
+			// Optimize: if the original data was a string, return it directly
+			if (parsedItem.isString === true) {
+				return rawData as T;
+			}
+
+			try {
+				return JSON.parse(rawData);
+			} catch (e) {
+				console.error('Failed to parse cache item:', e);
+				return rawData as T;
+			}
 		} catch (error) {
 			console.error('Failed to get cache item:', error);
 			// Clean up corrupted cache item
