@@ -28,10 +28,14 @@ function matchesRoute(pathname: string, routes: string[]): boolean {
 }
 
 export const handle: Handle = async ({ event, resolve }) => {
+	console.log(`[hooks.server.ts] 处理请求: ${event.request.method} ${event.url.pathname}`);
+
 	const { pathname } = event.url;
 
 	// Get user from session
 	const user = await getUserFromRequest(event);
+
+	console.log(`[hooks.server.ts] 用户: ${user?.email}`);
 
 	// Add user to locals for use in load functions and pages
 	event.locals.user = user;
