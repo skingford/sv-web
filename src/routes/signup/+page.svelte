@@ -2,11 +2,15 @@
 	import { enhance } from '$app/forms';
 	import { goto } from '$app/navigation';
 
-	let form = {
+	const form = $state<{
+		username: string;
+		email: string;
+		password: string;
+	}>({
 		username: '',
 		email: '',
 		password: ''
-	};
+	});
 
 	let errors = {
 		username: '',
@@ -50,7 +54,9 @@
 		};
 	}
 
-	function handleSubmit() {
+	function handleSubmit(event: SubmitEvent) {
+		event.preventDefault();
+
 		// Validate all fields
 		errors.username = validateUsername(form.username);
 		errors.email = validateEmail(form.email);
@@ -94,7 +100,7 @@
 
 	<div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
 		<div class="border border-primary-200 bg-white px-4 py-8 shadow-lg sm:rounded-lg sm:px-10">
-			<form class="space-y-6" on:submit|preventDefault={handleSubmit}>
+			<form class="space-y-6" onsubmit={handleSubmit} use:enhance>
 				<!-- Username Field -->
 				<div>
 					<label for="username" class="block text-sm font-medium text-primary-700">
@@ -113,7 +119,7 @@
 							class:focus:border-red-500={errors.username}
 							placeholder="Enter your username"
 							bind:value={form.username}
-							on:input={handleInput('username')}
+							oninput={handleInput('username')}
 						/>
 						{#if errors.username}
 							<p class="mt-2 text-sm text-red-600">{errors.username}</p>
@@ -139,7 +145,7 @@
 							class:focus:border-red-500={errors.email}
 							placeholder="Enter your email"
 							bind:value={form.email}
-							on:input={handleInput('email')}
+							oninput={handleInput('email')}
 						/>
 						{#if errors.email}
 							<p class="mt-2 text-sm text-red-600">{errors.email}</p>
@@ -165,7 +171,7 @@
 							class:focus:border-red-500={errors.password}
 							placeholder="Create a password"
 							bind:value={form.password}
-							on:input={handleInput('password')}
+							oninput={handleInput('password')}
 						/>
 						{#if errors.password}
 							<p class="mt-2 text-sm text-red-600">{errors.password}</p>

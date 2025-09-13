@@ -1,20 +1,20 @@
 <script>
-	import { cache } from '$lib/utils/cache/index';
+	import { localCache } from '$lib/utils/cache/index';
 
-	cache.set(
+	localCache.set(
 		'test',
 		{
 			name: 'test',
 			age: 18
 		},
 		{
-			ttl: 1000 * 60 // 1 minute
+			ttl: 60 // 1 minute
 		}
 	);
 
-	const test = cache.get('test');
+	const test = localCache.get('test');
 
-	console.log('test', test);
+	console.log('get cache data', test);
 </script>
 
 <h1>home</h1>

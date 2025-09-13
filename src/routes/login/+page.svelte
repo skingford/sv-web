@@ -1,13 +1,51 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
-	import type { ActionData } from './$types';
+	import { goto } from '$app/navigation';
+	import { login } from '$lib/api/auth';
+	import type { LoginReq } from '$lib/api/auth';
 
-	export let form: ActionData;
+	// export let form: ActionData;
 
-	let email = form?.email || '';
-	let password = '';
-	let rememberMe = false;
-	let isLoading = false;
+	const form = $state<LoginReq>({
+		username: '',
+		password: ''
+	});
+
+	const formValid = $state({
+		error: '',
+		isLoading: false,
+		rememberMe: false
+	});
+
+	const handleSubmit = async (event: SubmitEvent) => {
+		event.preventDefault();
+
+		// 设置加载状态
+		formValid.isLoading = true;
+		formValid.error = '';
+
+		try {
+			console.log('[ login ] >', form);
+
+			// 调用 alova API
+			const response = await login(form);
+
+			console.log('登录成功:', response);
+
+			// 保存 token 到本地存储
+			if (response.access_token) {
+				localStorage.setItem('access_token', response.access_token);
+			}
+
+			// 跳转到首页
+			goto('/dashboard');
+		} catch (error: any) {
+			console.error('登录失败:', error);
+			formValid.error = error.message || '登录失败，请检查用户名和密码';
+		} finally {
+			// 重置加载状态
+			formValid.isLoading = false;
+		}
+	};
 </script>
 
 <svelte:head>
@@ -31,7 +69,7 @@
 
 	<div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
 		<div class="border border-gray-200 bg-white px-4 py-8 shadow-lg sm:rounded-lg sm:px-10">
-			{#if form?.error}
+			{#if formValid.error}
 				<div class="mb-4 rounded-md border border-red-200 bg-red-50 p-4">
 					<div class="flex">
 						<div class="flex-shrink-0">
@@ -44,36 +82,26 @@
 							</svg>
 						</div>
 						<div class="ml-3">
-							<p class="text-sm text-red-800">{form.error}</p>
+							<p class="text-sm text-red-800">{formValid.error}</p>
 						</div>
 					</div>
 				</div>
 			{/if}
 
-			<form
-				class="space-y-6"
-				method="POST"
-				use:enhance={() => {
-					isLoading = true;
-					return async ({ update }) => {
-						isLoading = false;
-						await update();
-					};
-				}}
-			>
+			<form class="space-y-6" onsubmit={handleSubmit}>
 				<div>
-					<label for="email" class="mb-2 block text-sm font-medium text-gray-700">
+					<label for="username" class="mb-2 block text-sm font-medium text-gray-700">
 						Username or email address
 					</label>
 					<input
-						id="email"
-						name="email"
-						type="email"
-						autocomplete="email"
+						id="username"
+						name="username"
+						type="text"
+						autocomplete="username"
 						required
-						bind:value={email}
+						bind:value={form.username}
 						class="block w-full rounded-md border border-gray-300 px-3 py-2 text-sm placeholder-gray-400 shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
-						placeholder="Enter your email"
+						placeholder="Enter your username or email address"
 					/>
 				</div>
 
@@ -90,7 +118,7 @@
 						type="password"
 						autocomplete="current-password"
 						required
-						bind:value={password}
+						bind:value={form.password}
 						class="block w-full rounded-md border border-gray-300 px-3 py-2 text-sm placeholder-gray-400 shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
 						placeholder="Enter your password"
 					/>
@@ -101,7 +129,7 @@
 						id="remember-me"
 						name="remember-me"
 						type="checkbox"
-						bind:checked={rememberMe}
+						bind:checked={formValid.rememberMe}
 						class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
 					/>
 					<label for="remember-me" class="ml-2 block text-sm text-gray-700">
@@ -112,10 +140,10 @@
 				<div>
 					<button
 						type="submit"
-						disabled={isLoading}
+						disabled={formValid.isLoading}
 						class="flex w-full justify-center rounded-md bg-green-600 px-4 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-green-700 focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
 					>
-						{#if isLoading}
+						{#if formValid.isLoading}
 							<svg
 								class="mr-3 -ml-1 h-5 w-5 animate-spin text-white"
 								xmlns="http://www.w3.org/2000/svg"

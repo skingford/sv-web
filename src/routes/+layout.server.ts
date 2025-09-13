@@ -1,6 +1,11 @@
 import type { LayoutServerLoad } from './$types';
 import type { User } from '$lib/auth';
+import { cleanup } from '$lib/utils/cache/index';
+
 export const load: LayoutServerLoad = async ({ locals }) => {
+	// 清空过期缓存
+	cleanup();
+
 	return {
 		// user: locals.user
 		user: {

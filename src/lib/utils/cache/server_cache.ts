@@ -3,15 +3,11 @@
  * This is a simple in-memory cache for server-side rendering
  */
 
-interface ServerCacheItem {
-	data: any;
-	expiresAt: number;
-	createdAt: number;
-}
+import type { ServerCacheItem } from './types';
 
 export class ServerCache {
 	private cache = new Map<string, ServerCacheItem>();
-	private defaultTTL: number = 24 * 60 * 60 * 1000; // 24 hours
+	private defaultTTL: number = 24 * 60 * 60; // 24 hours in seconds
 
 	constructor(defaultTTL?: number) {
 		if (defaultTTL) {
@@ -28,7 +24,7 @@ export class ServerCache {
 
 		this.cache.set(key, {
 			data,
-			expiresAt: now + ttl,
+			expiresAt: now + ttl * 1000, // Convert seconds to milliseconds
 			createdAt: now
 		});
 	}

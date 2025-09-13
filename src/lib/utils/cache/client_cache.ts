@@ -1,18 +1,7 @@
-interface CacheItem {
-	data: string; // encrypted data
-	expiresAt: number;
-	createdAt: number;
-	isString: boolean; // Track if original data was a string
-}
-
-interface CacheOptions {
-	ttl?: number; // Time to live in milliseconds
-	encrypt?: boolean; // Whether to encrypt the data (default: true)
-	storage?: Storage; // Storage backend (default: localStorage)
-}
+import type { CacheItem, CacheOptions } from './types';
 
 export class LocalCache {
-	private defaultTTL: number = 24 * 60 * 60 * 1000; // 24 hours
+	private defaultTTL: number = 24 * 60 * 60; // 24 hours in seconds
 	private encryptionKey: string;
 	private storage: Storage;
 
@@ -224,7 +213,7 @@ export class LocalCache {
 		const now = Date.now();
 		const cacheItem: CacheItem = {
 			data: finalData,
-			expiresAt: now + ttl,
+			expiresAt: now + ttl * 1000, // Convert seconds to milliseconds
 			createdAt: now,
 			isString
 		};
