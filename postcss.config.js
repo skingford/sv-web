@@ -6,7 +6,7 @@ export default {
 			// 根元素字体大小，与 fontAdapterPlugin 的 baseFont 保持一致
 			rootValue: 16,
 			// 需要转换的CSS属性，* 表示所有属性
-			propList: ['*'],
+			propList: ['*', '!font-size'],
 			// 保留小数位数
 			unitPrecision: 5,
 			// 最小转换的像素值，小于该值的不转换

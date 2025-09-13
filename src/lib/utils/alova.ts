@@ -2,7 +2,7 @@ import { createAlova } from 'alova';
 import adapterFetch from 'alova/fetch';
 
 export const defHttp = createAlova({
-	baseURL: 'https://stroller-client.wegui.cn',
+	baseURL: 'http://localhost:5001',
 	timeout: 60 * 1000,
 	requestAdapter: adapterFetch(),
 	beforeRequest(method) {
