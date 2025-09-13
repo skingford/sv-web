@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { login } from '$lib/api/auth';
-	import type { LoginReq } from '$lib/api/auth';
+	import type { LoginReq } from '$lib/api';
 	import { localCache, LoginInfoCacheKey } from '$lib/utils/cache';
 
 	// export let form: ActionData;
