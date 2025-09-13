@@ -14,7 +14,7 @@ interface LoginResp {
 }
 
 export const login = (data: LoginReq) => {
-	return defHttp.Post<LoginResp>('/auth/login', { data, meta: { ignoreToken: true } });
+	return defHttp.Post<LoginResp>('/v1/auth/login', { ...data }, { meta: { ignoreToken: true } });
 };
 
 export type { LoginReq, LoginResp };

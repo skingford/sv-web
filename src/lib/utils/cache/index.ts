@@ -40,8 +40,10 @@ export function createCache(encryptionKey?: string, defaultStorage?: Storage) {
 /**
  * Create cache instances for different use cases
  */
-export const localCache = createCache();
-export const sessionCache = browser ? createCache(undefined, sessionStorage) : createCache();
+export const localCache = createCache('epoch-sso');
+export const sessionCache = browser
+	? createCache('epoch-sso', sessionStorage)
+	: createCache('epoch-sso');
 
 // 创建增强的缓存实例
 export const enhancedLocalCache = new EnhancedCacheUtils(localCache);

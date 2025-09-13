@@ -4,6 +4,7 @@ export class LocalCache {
 	private defaultTTL: number = 24 * 60 * 60; // 24 hours in seconds
 	private encryptionKey: string;
 	private storage: Storage;
+	private keyPrefix: string = '_app_sso_';
 
 	constructor(encryptionKey?: string, defaultStorage: Storage = localStorage) {
 		// Check if we're in a browser environment
@@ -20,8 +21,8 @@ export class LocalCache {
 	 * This ensures the same key is used across sessions
 	 */
 	private getOrCreatePersistentKey(): string {
-		const KEY_STORAGE_KEY = 'cache_encryption_key';
-
+		const KEY_STORAGE_KEY = `${this.keyPrefix}encryption_key`;
+		``;
 		try {
 			// Try to get existing key
 			let existingKey = this.storage.getItem(KEY_STORAGE_KEY);
@@ -179,7 +180,7 @@ export class LocalCache {
 	 * Generate cache key with prefix
 	 */
 	private getCacheKey(key: string): string {
-		return `cache_${key}`;
+		return `${this.keyPrefix}${key}`;
 	}
 
 	/**
@@ -344,7 +345,7 @@ export class LocalCache {
 
 		for (let i = 0; i < storage.length; i++) {
 			const key = storage.key(i);
-			if (key && key.startsWith('cache_')) {
+			if (key && key.startsWith(this.keyPrefix)) {
 				keysToRemove.push(key);
 			}
 		}
@@ -357,7 +358,7 @@ export class LocalCache {
 	 * Use this when you want to change the encryption key
 	 */
 	resetEncryptionKey(): void {
-		const KEY_STORAGE_KEY = 'cache_encryption_key';
+		const KEY_STORAGE_KEY = `${this.keyPrefix}encryption_key`;
 
 		// Clear the old key
 		this.storage.removeItem(KEY_STORAGE_KEY);
@@ -383,7 +384,7 @@ export class LocalCache {
 	 * Check if encryption key exists in storage
 	 */
 	hasPersistentKey(): boolean {
-		const KEY_STORAGE_KEY = 'cache_encryption_key';
+		const KEY_STORAGE_KEY = `${this.keyPrefix}encryption_key`;
 		return this.storage.getItem(KEY_STORAGE_KEY) !== null;
 	}
 
@@ -398,7 +399,7 @@ export class LocalCache {
 
 		for (let i = 0; i < storage.length; i++) {
 			const key = storage.key(i);
-			if (key && key.startsWith('cache_')) {
+			if (key && key.startsWith(this.keyPrefix)) {
 				keysToCheck.push(key);
 			}
 		}
@@ -439,7 +440,7 @@ export class LocalCache {
 
 		for (let i = 0; i < storage.length; i++) {
 			const key = storage.key(i);
-			if (key && key.startsWith('cache_')) {
+			if (key && key.startsWith(this.keyPrefix)) {
 				totalItems++;
 				const item = storage.getItem(key);
 				if (item) {

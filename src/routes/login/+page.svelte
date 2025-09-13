@@ -2,12 +2,13 @@
 	import { goto } from '$app/navigation';
 	import { login } from '$lib/api/auth';
 	import type { LoginReq } from '$lib/api/auth';
+	import { localCache } from '$lib/utils/cache';
 
 	// export let form: ActionData;
 
 	const form = $state<LoginReq>({
-		username: '',
-		password: ''
+		username: 'admin',
+		password: 'Admin!2025'
 	});
 
 	const formValid = $state({
@@ -27,14 +28,14 @@
 			console.log('[ login ] >', form);
 
 			// 调用 alova API
-			const response = await login(form);
+			const data = await login(form);
 
-			console.log('登录成功:', response);
+			console.log('登录成功:', data);
 
-			// 保存 token 到本地存储
-			if (response.access_token) {
-				localStorage.setItem('access_token', response.access_token);
-			}
+			localCache.set('auth_data', data, {
+				ttl: data.expires_in,
+				encrypt: true
+			});
 
 			// 跳转到首页
 			goto('/dashboard');

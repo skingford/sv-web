@@ -8,7 +8,7 @@
 			age: 18
 		},
 		{
-			ttl: 60 // 1 minute
+			ttl: 1 // 1 minute
 		}
 	);
 
